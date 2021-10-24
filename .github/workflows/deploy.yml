@@ -27,7 +27,18 @@ jobs:
       - run: ls
       - name: setup npm
         run: |
-          cd temp
-          npm ci
-          npm run deployment-branch >> $GITHUB_ENV
-          echo "${{ env.deployment-branch }}"
+          npm run test
+          mv temp/ build/
+      - name: Commit files for change
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit --message "Pushed brand-new site files" --allow-empty
+          # push files into `gh-pages` branch
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: dev
+          force: true
