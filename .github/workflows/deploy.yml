@@ -13,6 +13,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # checkout `dev` branch
+      - name: checkout master branch
+        uses: actions/checkout@v2
+        with:
+          ref: dev
+          persist-credentials: false
+      # remove all files from the `dev` checkout
+      # we want to start with a clean slate
+      - name: remove all files
+        run: |
+          rm -rf *
       - name: checkout main branch
         uses: actions/checkout@v2
         with:
@@ -33,6 +44,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git config --local advice.addIgnoredFile false
           git add build/*
           git commit --message "Pushed brand-new site files" --allow-empty
           # push files into `gh-pages` branch
