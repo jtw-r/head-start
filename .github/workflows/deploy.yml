@@ -23,6 +23,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "${{ env.NODE }}"
+      - run: npm --version
+      - name: setup npm
+        run: npm ci
       - name: get branch name
         run: |
           npm ci
