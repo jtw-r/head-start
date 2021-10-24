@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: "${{ env.NODE }}"
       - run: npm --version
+      - run: ls
       - name: setup npm
         run: |
           cd temp
