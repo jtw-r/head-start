@@ -1,0 +1,24 @@
+name: GitHub Node.js Deploy
+on:
+  # Only run on pushes to the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Set the node.js version
+      - name: Set Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "${{ env.NODE }}"
+      - name: get branch name
+        run: |
+          npm run deployment-branch >> $GITHUB_ENV
+          echo "${{ env.deployment-branch }}"

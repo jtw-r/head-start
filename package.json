@@ -2,9 +2,14 @@
   "name": "head-start",
   "version": "1.0.0",
   "description": "A project setup tool for Node.js",
-  "main": "index.js",
+  "main": "src/main.sh",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "bash src/main.sh setup temp --bypass",
+    "clean": "rm -rf temp/",
+    "test-unin": "bash src/main.sh uninstall a temp"
+  },
+  "bin": {
+    "head-start": "src/main.sh"
   },
   "repository": {
     "type": "git",
