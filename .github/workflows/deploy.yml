@@ -13,6 +13,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: checkout dev branch
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          persist-credentials: false
       # Set the node.js version
       - name: Set Node.js version
         uses: actions/setup-node@v1
@@ -20,6 +25,5 @@ jobs:
           node-version: "${{ env.NODE }}"
       - name: get branch name
         run: |
-          ls
           npm run deployment-branch >> $GITHUB_ENV
           echo "${{ env.deployment-branch }}"
