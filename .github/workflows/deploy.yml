@@ -20,5 +20,6 @@ jobs:
           node-version: "${{ env.NODE }}"
       - name: get branch name
         run: |
+          ls
           npm run deployment-branch >> $GITHUB_ENV
           echo "${{ env.deployment-branch }}"
