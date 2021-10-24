@@ -15,16 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # checkout `dev` branch
-      - name: checkout master branch
+    - name: checkout master branch
       uses: actions/checkout@v2
       with:
         ref: dev
         persist-credentials: false
-        # remove all files from the `dev` checkout
-        # we want to start with a clean slate
-        - name: remove all files
-          run: |
-            rm -rf *
+    # remove all files from the `dev` checkout
+    # we want to start with a clean slate
+    - name: remove all files
+      run: |
+        rm -rf *
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
