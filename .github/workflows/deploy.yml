@@ -45,7 +45,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git config --local advice.addIgnoredFile false
-          git add build/*
+          git add build/
           git commit --message "Pushed brand-new site files" --allow-empty
           # push files into `gh-pages` branch
       - name: Push changes
