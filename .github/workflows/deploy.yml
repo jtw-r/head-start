@@ -10,20 +10,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  clean:
+    name: Clean
     runs-on: ubuntu-latest
     steps:
       # checkout `dev` branch
       - name: checkout master branch
-        uses: actions/checkout@v2
-        with:
-          ref: dev
-          persist-credentials: false
-      # remove all files from the `dev` checkout
-      # we want to start with a clean slate
-      - name: remove all files
-        run: |
-          rm -rf *
+      uses: actions/checkout@v2
+      with:
+        ref: dev
+        persist-credentials: false
+        # remove all files from the `dev` checkout
+        # we want to start with a clean slate
+        - name: remove all files
+          run: |
+            rm -rf *
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
       - name: checkout main branch
         uses: actions/checkout@v2
         with:
@@ -47,7 +52,7 @@ jobs:
           git config --local advice.addIgnoredFile false
           git add build/
           git commit --message "Pushed brand-new site files" --allow-empty
-          # push files into `gh-pages` branch
+      # push files into `gh-pages` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
