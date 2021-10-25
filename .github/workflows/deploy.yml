@@ -14,18 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # checkout `dev` branch
-      - name: checkout master branch
+      - name: checkout dev branch
         uses: actions/checkout@v2
         with:
           ref: dev
           persist-credentials: false
       # remove all files from the `dev` checkout
       # we want to start with a clean slate
-      - name: remove all files
+      - name: remove all files from dev branch
         run: |
           rm -rf *
-      # checkout `main` branch to the `temp/` directory
-      - name: checkout dev branch
+      # checkout `main` branch to the `mn/` directory
+      - name: checkout main branch into the mn/ directory
         uses: actions/checkout@v2
         with:
           path: mn
