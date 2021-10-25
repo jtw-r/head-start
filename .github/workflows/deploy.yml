@@ -27,9 +27,11 @@ jobs:
           node-version: "${{ env.NODE }}"
       - run: npm --version
       - run: ls
+      - name: delete dev branch
+        run: git branch -D dev &>/dev/null || true
       - name: setup npm
         run: |
-          git branch -D dev &>/dev/null || true
+          cd temp
           npm ci
           npm run test
           mv temp/ new/
