@@ -49,15 +49,14 @@ jobs:
       # run npm build in temp folder to create files
       - name: run npm build
         run: |
-          cd ..
+          cd lib
           ls
           npm run test
       # move the `temp` files into root dir and remove others.
       - name: move files
         run: |
-          mv temp/* ./
+          mv lib/temp/* ./
           rm -rf lib
-          rm -rf temp
       # commit changes
       - name: Commit files for change
         run: |
