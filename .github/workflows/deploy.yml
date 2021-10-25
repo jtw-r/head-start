@@ -54,7 +54,7 @@ jobs:
           git config --local advice.addIgnoredFile false
           git config --local add.ignoreErrors true
           git add new/
-          git commit -o --message "Pushed brand-new site files" --allow-empty
+          git commit new --only --allow-empty
       # push files into `gh-pages` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
