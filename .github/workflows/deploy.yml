@@ -41,7 +41,6 @@ jobs:
           git config --local add.ignoreErrors true
           git add new
           git commit --only new --allow-empty --message "Pushed brand-new site files"
-          git push HEAD:dev
       # push files into `gh-pages` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
