@@ -52,8 +52,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git config --local advice.addIgnoredFile false
           git config --local add.ignoreErrors true
-          git add build/* --ignore-errors
-          git commit --message "Pushed brand-new site files" --allow-empty
+          git commit --message "Pushed brand-new site files" --allow-empty -- build
       # push files into `gh-pages` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
