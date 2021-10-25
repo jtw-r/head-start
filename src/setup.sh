@@ -114,7 +114,7 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         if $file_watchers
         then
           npm i nodemon --save-dev
-          npm set-script watch-scss "nodemon --watch src/scss -e scss --exec 'npm run css-compile'"
+          npm set-script watch-scss "nodemon --watch src/scss -e scss --exec 'npm run-script css-compile'"
         fi
         ;;
       ts | typescript)
@@ -125,11 +125,11 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         # Create a tsconfig.json file with the proper directories configured
         tsc --showConfig --rootDir src/ts --outDir build/js --module commonjs > tsconfig.json
         npm set-script ts-compile "tsc --build --force"
-        npm run ts-compile
+        npm run-script ts-compile
         if $file_watchers
         then
           npm i nodemon --save-dev
-          npm set-script watch-ts "nodemon --watch src/ts -e ts --exec 'npm run ts-compile'"
+          npm set-script watch-ts "nodemon --watch src/ts -e ts --exec 'npm run-script ts-compile'"
         fi
         ;;
       js | javascript | node)
@@ -144,7 +144,7 @@ done
 # Deploy time!!
 npm set-script deployment-branch "echo $deploy_branch_name"
 npm set-script compile "npm-run-all *-compile"
-npm set-script build "npm run compile"
+npm set-script build "npm run-script compile"
 
 
 
