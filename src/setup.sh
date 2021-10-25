@@ -72,6 +72,7 @@ else
 fi
 
 git branch "$deploy_branch_name"
+echo git branch --list
 
 # Install a few dev dependencies
 npm i npm-run-all --save-dev
