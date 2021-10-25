@@ -38,6 +38,9 @@ jobs:
           mv temp/ new/
           rm -rf build/node_modules/
           ls
+      - name: test git
+        run: |
+          git
       - name: Commit files for change
         run: |
           git config user.email "action@github.com"
