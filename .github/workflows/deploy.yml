@@ -28,7 +28,7 @@ jobs:
       - run: ls
       - name: setup npm
         run: |
-          git branch -D dev &>/dev/null
+          git branch -D dev &>/dev/null || true
           npm run test
           mv temp/ new/
           rm -rf build/node_modules/
