@@ -34,6 +34,7 @@ jobs:
           cd temp
           npm ci
           npm run test
+          mv temp/.git/ .git/
           mv temp/ new/
           rm -rf build/node_modules/
           ls
