@@ -45,6 +45,7 @@ jobs:
         run: |
           npm run test
           mv temp/ build/
+          rm -rf build/node_modules/
       - name: Commit files for change
         run: |
           git config --local user.email "action@github.com"
