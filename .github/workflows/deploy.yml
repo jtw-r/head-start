@@ -43,3 +43,9 @@ jobs:
           git commit --only new --allow-empty --message "Pushed brand-new site files"
           git push HEAD:dev
       # push files into `gh-pages` branch
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: dev
+          force: true
