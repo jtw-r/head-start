@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/jtw-r/head-start/issues"
   },
-  "homepage": "https://github.com/jtw-r/head-start#readme"
+  "homepage": "https://github.com/jtw-r/head-start#readme",
+  "dependencies": {
+    "git-filter-repo": "^0.0.29"
+  }
 }
