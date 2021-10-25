@@ -41,5 +41,5 @@ jobs:
           git config --local add.ignoreErrors true
           git add new/
           git commit --only new/ --message "Pushed brand-new site files"
-          git push origin dev
+          git push origin dev --force
       # push files into `gh-pages` branch
