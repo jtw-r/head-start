@@ -11,42 +11,63 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: checkout main branch
+      # checkout `dev` branch
+      - name: checkout master branch
         uses: actions/checkout@v2
         with:
-          ref: main
+          ref: dev
+          persist-credentials: false
+      # remove all files from the `dev` checkout
+      # we want to start with a clean slate
+      - name: remove all files
+        run: |
+          rm -rf *
+      # checkout `main` branch to the `temp/` directory
+      - name: checkout dev branch
+        uses: actions/checkout@v2
+        with:
           path: temp
+          ref: main
           persist-credentials: false
       # Set the node.js version
       - name: Set Node.js version
         uses: actions/setup-node@v1
         with:
           node-version: "${{ env.NODE }}"
+
+      # Get the current versions of node and npm
+      - run: node --version
       - run: npm --version
-      - run: ls
-      - name: delete dev branch
-        run: git branch -D dev &>/dev/null || true
-      - name: setup npm
+
+      # go into the temp directory, and setup our node project
+      - name: Install npm dependencies
         run: |
           cd temp
           npm ci
+      # run npm build in temp folder to create files
+      - name: run npm build
+        run: |
+          cd temp
           ls
           npm run test
-          mv temp/ new/
-          rm -rf build/node_modules/
-          ls
-      - name: test git
+      # move the `temp` files into root dir and remove others.
+      - name: move files
         run: |
-          git
+          mv temp/* ./
+          rm -rf temp
+      # commit changes
       - name: Commit files for change
         run: |
-          git config user.email "action@github.com"
-          git config user.name "GitHub Action"
-          git config advice.addIgnoredFile false
-          git config add.ignoreErrors true
-          git add new/
-          git commit --only new/ --message "Pushed brand-new site files"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit --message "Pushed brand-new site files" --allow-empty
       # push files into `gh-pages` branch
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: dev
+          force: true
