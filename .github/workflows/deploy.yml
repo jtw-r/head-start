@@ -62,3 +62,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: dev
           force: true
+          directory: build
