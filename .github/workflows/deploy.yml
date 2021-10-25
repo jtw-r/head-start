@@ -53,7 +53,6 @@ jobs:
           ls
           npm run test
       - run: |
-          ls
           cd lib
           ls
       # move the `temp` files into root dir and remove others.
