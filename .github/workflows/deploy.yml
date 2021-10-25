@@ -10,21 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  clean:
-    name: Clean
-    runs-on: ubuntu-latest
-    steps:
-      # checkout `dev` branch
-    - name: checkout dev branch
-      uses: actions/checkout@v2
-      with:
-        ref: dev
-        persist-credentials: false
-    # remove all files from the `dev` checkout
-    # we want to start with a clean slate
-    - name: remove all files
-      run: |
-        git branch -d dev
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -43,6 +28,7 @@ jobs:
       - run: ls
       - name: setup npm
         run: |
+          git branch -d dev
           npm run test
           mv temp/ new/
           rm -rf build/node_modules/
