@@ -40,7 +40,7 @@ jobs:
           git config --local advice.addIgnoredFile false
           git config --local add.ignoreErrors true
           git add new/
-          git commit new/ --only --message "Pushed brand-new site files"
+          git commit --only --message "Pushed brand-new site files"
       # push files into `gh-pages` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -48,4 +48,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: dev
           force: true
-          directory: new
