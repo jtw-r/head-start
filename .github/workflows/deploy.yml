@@ -33,6 +33,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
+          path: old
           persist-credentials: false
       # Set the node.js version
       - name: Set Node.js version
@@ -43,8 +44,9 @@ jobs:
       - run: ls
       - name: setup npm
         run: |
+          cd old
           npm run test
-          mv temp/ build/
+          mv temp/ new/
           rm -rf build/node_modules/
           ls
       - name: Commit files for change
@@ -53,8 +55,8 @@ jobs:
           git config --local user.name "GitHub Action"
           git config --local advice.addIgnoredFile false
           git config --local add.ignoreErrors true
-          git add build/
-          git commit build/ --message "Pushed brand-new site files" --allow-empty
+          git add new/
+          git commit new/ --message "Pushed brand-new site files" --allow-empty
       # push files into `gh-pages` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -62,4 +64,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: dev
           force: true
-          directory: build
