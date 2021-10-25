@@ -33,7 +33,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
-          path: old
           persist-credentials: false
       # Set the node.js version
       - name: Set Node.js version
@@ -44,7 +43,6 @@ jobs:
       - run: ls
       - name: setup npm
         run: |
-          cd old
           npm run test
           mv temp/ new/
           rm -rf build/node_modules/
@@ -55,8 +53,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git config --local advice.addIgnoredFile false
           git config --local add.ignoreErrors true
-          git add new/
-          git commit new/ --message "Pushed brand-new site files" --allow-empty
+          git commit -o new/ --message "Pushed brand-new site files" --allow-empty
       # push files into `gh-pages` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
