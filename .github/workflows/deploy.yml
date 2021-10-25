@@ -23,7 +23,6 @@ jobs:
       # we want to start with a clean slate
       - name: remove all files from dev branch
         run: |
-          git rm --cached lib
           rm -rf *
       # checkout `main` branch to the `mn/` directory
       - name: checkout main branch into the mn/ directory
