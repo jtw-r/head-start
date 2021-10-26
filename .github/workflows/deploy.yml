@@ -13,6 +13,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # checkout `dev` branch
+      - name: checkout dev branch
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       # remove all files from the `dev` checkout
       # we want to start with a clean slate
       - run: ls
