@@ -153,6 +153,8 @@ done
 
 # Deploy time!!
 echo "-:-"
+echo $PATH
+echo "-:-"
 ls
 echo "-:-"
 mkdir -p .github/workflows
