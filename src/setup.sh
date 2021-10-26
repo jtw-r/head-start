@@ -112,6 +112,9 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         npm i node-sass --save-dev
         mkdir "src/scss"
         mkdir "build/css"
+        # pre-populate folders
+        echo '' > src/scss/style.scss
+        echo '' > build/css/style.css
         npm set-script scss-compile "node-sass --output-style expanded --source-map true --source-map-contents true --precision 5 src/scss/ -o build/css/"
         if $file_watchers
         then
@@ -123,9 +126,14 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         npm i typescript --save-dev
         mkdir "src/ts"
         mkdir "build/js"
+        # pre-populate folders
         echo '' > src/ts/index.ts
+        echo '' > build/js/index.js
         # Create a tsconfig.json file with the proper directories configured
         tsc --showConfig --rootDir src/ts --outDir build/js --module commonjs > tsconfig.json
+        echo "Testing!!!!"
+        npm set-script something "something"
+        echo "Done Testing!!!!"
         npm set-script ts-compile "tsc --build --force"
         npm run-script ts-compile
         if $file_watchers
