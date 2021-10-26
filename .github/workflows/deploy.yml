@@ -37,7 +37,7 @@ jobs:
       - name: Set Node.js version
         uses: actions/setup-node@v1
         with:
-          node-version: "${{ env.NODE }}"
+          node-version: 16.11.x
 
       # Get the current versions of node and npm
       - run: node --version
