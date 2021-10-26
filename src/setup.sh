@@ -157,14 +157,14 @@ echo "-:-"
 ls
 echo "-:-"
 mkdir -p .github/workflows
-cp "$1"/src/setup_assets/deploy-to-branch.yml .github/workflows/deploy-to-branch.yml
+cp ./src/setup_assets/deploy-to-branch.yml .github/workflows/deploy-to-branch.yml
 
 npm set-script deployment-branch "echo $deploy_branch_name"
 npm set-script compile "npm-run-all *-compile"
 npm set-script build "npm run-script compile"
 
 echo "-:-"
-cd ../
+cd /../
 ls
 
 exit 0
