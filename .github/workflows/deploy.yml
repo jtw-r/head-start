@@ -21,9 +21,11 @@ jobs:
           persist-credentials: false
       # remove all files from the `dev` checkout
       # we want to start with a clean slate
+      - run: ls
       - name: remove all files from dev branch
         run: |
           rm -rf *
+      - run: ls
       # checkout `main` branch to the `mn/` directory
       - name: checkout main branch into the mn/ directory
         uses: actions/checkout@v2
@@ -40,6 +42,7 @@ jobs:
       # Get the current versions of node and npm
       - run: node --version
       - run: npm --version
+      - run: ls
       - run: |
           cd mn
           ls
