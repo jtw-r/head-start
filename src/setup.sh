@@ -163,4 +163,8 @@ npm set-script deployment-branch "echo $deploy_branch_name"
 npm set-script compile "npm-run-all *-compile"
 npm set-script build "npm run-script compile"
 
+echo "-:-"
+cd /../temp/src
+ls
+
 exit 0
