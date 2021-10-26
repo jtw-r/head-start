@@ -153,7 +153,6 @@ done
 
 # Deploy time!!
 echo "-:-"
-echo $PATH
 echo "-:-"
 ls
 echo "-:-"
@@ -164,6 +163,7 @@ npm set-script deployment-branch "echo $deploy_branch_name"
 npm set-script compile "npm-run-all *-compile"
 npm set-script build "npm run-script compile"
 
-
+cd ..
+ls
 
 exit 0
