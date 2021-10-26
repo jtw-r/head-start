@@ -24,6 +24,7 @@ jobs:
       - name: remove all files from dev branch
         run: |
           rm -rf *
+          rm -rf .github/
       - run: ls
       # checkout `main` branch to the `mn/` directory
       - name: checkout main branch into the mn/ directory

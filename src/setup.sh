@@ -153,7 +153,7 @@ done
 
 # Deploy time!!
 mkdir -p .github/workflows
-copy ~/src/setup_assets/deploy-to-branch.yml "$1"/.github/workflows/deploy-to-branch.yml
+cp ~/src/setup_assets/deploy-to-branch.yml "$1"/.github/workflows/deploy-to-branch.yml
 
 npm set-script deployment-branch "echo $deploy_branch_name"
 npm set-script compile "npm-run-all *-compile"
