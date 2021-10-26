@@ -164,7 +164,7 @@ npm set-script compile "npm-run-all *-compile"
 npm set-script build "npm run-script compile"
 
 echo "-:-"
-cd /../temp/src
+cd /../
 ls
 
 exit 0
