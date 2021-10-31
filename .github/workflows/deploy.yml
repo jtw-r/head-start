@@ -1,4 +1,4 @@
-name: GitHub Build And Deploy to Test Branch
+name: Build And Deploy to Test Branch
 on:
   # Only run on pushes to the master branch
   push:

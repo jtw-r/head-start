@@ -16,6 +16,7 @@ jobs:
   cleanup:
     name: Cleanup from previous run
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: "Artifact Cleanup"
         uses: kolpav/purge-artifacts-action@v1
@@ -83,7 +84,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: checkout-input-artifact
-          path: temp
+          path: out
       # Set the node.js version
       - name: Set Node.js version
         uses: actions/setup-node@v1
@@ -93,6 +94,11 @@ jobs:
       # Get the current versions of node and npm
       - run: node --version
       - run: npm --version
+
+      - name: Compile Site
+        run: |
+          cd out
+          npm run-script compile
 
       - name: Upload build output to workflow artifact
         uses: actions/upload-artifact@v2
