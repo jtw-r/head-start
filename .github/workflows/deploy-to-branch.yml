@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       branch_name: |
-        testing
+        ${{ npm -v }}
     steps:
       - name: checkout main branch into the setup/ directory
         uses: actions/checkout@v2
