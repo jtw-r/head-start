@@ -59,8 +59,10 @@ jobs:
           npm run init
       # move the `temp` files into root dir and remove others.
       - name: move files
-        run: mv setup/temp/* ./
-      - name: remove the mn/ directory
+        run: |
+          mv setup/temp/* ./
+          mv setup/temp/.github/* ./.github/
+      - name: remove the setup/ directory
         run: rm -rf setup
       # commit changes
       - name: Commit files for change
