@@ -167,6 +167,8 @@ mkdir -p .github/workflows
 echo "Operating directory: ${PWD##*/}"
 echo "$SCRIPT_DIR/../"
 cp "$SCRIPT_DIR/../"setup_assets/deploy-to-branch.yml .github/workflows/deploy-to-branch.yml
+cd "$SCRIPT_DIR/../"
+ls
 #cp ./src/setup_assets/deploy-to-branch.yml .github/workflows/deploy-to-branch.yml
 
 npm set-script deployment-branch "echo $deploy_branch_name"
