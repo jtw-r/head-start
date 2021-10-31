@@ -26,6 +26,6 @@ jobs:
         with:
           node-version: 16.11.x
       - name: Get values from NPM
-        run: |
-          npm run-script branch-name >> $branch_name
-          echo "the branch name is $branch_name"
+        run: npm run-script branch-name >> $GITHUB_ENV
+      - name: Echo values from NPM
+          run: echo "the branch name is $branch_name"
