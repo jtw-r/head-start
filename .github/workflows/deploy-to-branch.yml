@@ -12,8 +12,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      branch-name: nothing
     steps:
       - name: checkout main branch into the setup/ directory
         uses: actions/checkout@v2
