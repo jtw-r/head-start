@@ -74,17 +74,11 @@ jobs:
     needs: [checkout-dev, checkout-main]
     runs-on: ubuntu-latest
     steps:
-      # Download the artifact from the previous job ('checkout-dev')
-      - name: Download our checkout-dev artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: checkout-output-artifact
       # Download the artifact from the previous job ('checkout-main')
       - name: Download our checkout-main artifact
         uses: actions/download-artifact@v2
         with:
           name: checkout-input-artifact
-          path: out
       # Set the node.js version
       - name: Set Node.js version
         uses: actions/setup-node@v1
@@ -97,7 +91,6 @@ jobs:
 
       - name: Compile Site
         run: |
-          cd out
           npm ci
           npm run-script compile
 
