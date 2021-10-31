@@ -13,10 +13,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # checkout `main` branch
+      # checkout `build` branch
       - name: checkout test branch
         uses: actions/checkout@v2
         with:
+          ref: build
           persist-credentials: false
       # remove all files from the `test` checkout
       # we want to start with a clean slate
