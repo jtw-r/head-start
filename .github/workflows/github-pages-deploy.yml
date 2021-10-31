@@ -1,4 +1,4 @@
-name: GitHub Build And Deploy to Test Branch
+name: GitHub Pages Deploy
 on:
   # Only run on pushes to the master branch
   push:
@@ -10,22 +10,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  clear_branch:
+    name: Clear our
     runs-on: ubuntu-latest
     steps:
-      # checkout `test` branch
-      - name: checkout test branch
+      # checkout `dev` branch
+      - name: checkout dev branch
         uses: actions/checkout@v2
         with:
+          ref: dev
           persist-credentials: false
-      # remove all files from the `test` checkout
+      # remove all files from the `dev` checkout
       # we want to start with a clean slate
       - run: ls
-      - name: remove all files from test branch
+      - name: remove all files from dev branch
         run: |
           rm -rf *
           rm -rf .github/
       - run: ls
+      - name: Commit files for change
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit --message "Cleared files" --allow-empty
+      # push files into `gh-pages` branch
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.MY_TOKEN }}
+          branch: dev
+          force: true
+  build:
+    name: Build To Github Pages Branch
+    needs: clear_branch
+    runs-on: ubuntu-latest
+    steps:
+      # checkout `dev` branch
+      - name: checkout dev branch
+        uses: actions/checkout@v2
+        with:
+          ref: dev
+          persist-credentials: false
       # checkout `main` branch to the `setup/` directory
       - name: checkout main branch into the setup/ directory
         uses: actions/checkout@v2
@@ -79,5 +105,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.MY_TOKEN }}
-          branch: test
+          branch: dev
           force: true
