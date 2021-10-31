@@ -1,15 +1,15 @@
 name: GitHub Pages Deploy
 env:
-  input_branch: main
+  input_branch: test
   output_branch: dev
 on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - main
+      - test
   pull_request:
     branches:
-      - main
+      - test
   workflow_dispatch:
 
 jobs:
