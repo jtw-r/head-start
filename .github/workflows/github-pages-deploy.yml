@@ -6,10 +6,10 @@ on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - $input-branch
+      - ${{ env.input-branch }}
   pull_request:
     branches:
-      - $input-branch
+      - ${{ env.input-branch }}
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
       - name: checkout output branch
         uses: actions/checkout@v2
         with:
-          ref: $output-branch
+          ref: ${{ env.output-branch }}
           persist-credentials: false
       # we can run any git sanity checks, to make sure that everything is up to par
 
@@ -82,5 +82,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.MY_TOKEN }}
-          branch: $output-branch
+          branch: ${{ env.output-branch }}
           force: true
