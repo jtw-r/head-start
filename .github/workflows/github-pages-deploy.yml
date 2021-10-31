@@ -1,15 +1,15 @@
 name: GitHub Pages Deploy
 env:
-  input-branch: main
-  output-branch: dev
+  input_branch: main
+  output_branch: dev
 on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - ${{ env.input-branch }}
+      - ${{ input_branch }}
   pull_request:
     branches:
-      - ${{ env.input-branch }}
+      - ${{ input_branch }}
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
       - name: checkout output branch
         uses: actions/checkout@v2
         with:
-          ref: ${{ env.output-branch }}
+          ref: ${{ output_branch }}
           persist-credentials: false
       # we can run any git sanity checks, to make sure that everything is up to par
 
@@ -82,5 +82,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.MY_TOKEN }}
-          branch: ${{ env.output-branch }}
+          branch: ${{ output_branch }}
           force: true
