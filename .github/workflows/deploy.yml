@@ -26,8 +26,8 @@ jobs:
           rm -rf *
           rm -rf .github/
       - run: ls
-      # checkout `main` branch to the `mn/` directory
-      - name: checkout main branch into the mn/ directory
+      # checkout `main` branch to the `setup/` directory
+      - name: checkout main branch into the setup/ directory
         uses: actions/checkout@v2
         with:
           path: setup

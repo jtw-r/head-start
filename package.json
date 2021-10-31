@@ -7,7 +7,8 @@
     "test": "bash src/commands/test.sh",
     "init": "bash src/cli.sh init temp/ --bypass",
     "clean": "rm -rf temp/",
-    "test-unin": "bash src/cli.sh uninstall a temp"
+    "test-unin": "bash src/cli.sh uninstall a temp",
+    "branch-name": "echo 'custom-branch-name'"
   },
   "bin": {
     "head-start": "src/cli.sh"
