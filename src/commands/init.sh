@@ -165,7 +165,7 @@ ls
 echo "-:-"
 mkdir -p .github/workflows
 echo "Operating directory: ${PWD##*/}"
-cp "$SCRIPT_DIR/../"setup_assets/deploy-to-branch.yml .github/workflows/deploy-to-branch.yml
+cp "$SCRIPT_DIR/../"setup_assets/deploy-to-ghpages.yml .github/workflows/deploy-to-ghpages.yml
 ls
 #cp ./src/setup_assets/github-pages-deploy.yml .github/workflows/github-pages-deploy.yml
 
