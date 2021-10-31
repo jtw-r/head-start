@@ -13,7 +13,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      branch_name: nothing
+      branch-name: nothing
     steps:
       - name: checkout main branch into the setup/ directory
         uses: actions/checkout@v2
@@ -26,6 +26,6 @@ jobs:
         with:
           node-version: 16.11.x
       - name: Get values from NPM
-        run: npm run-script branch-name >> $branch_name
+        run: npm run-script branch-name >> $GITHUB_ENV
       - name: Echo values from NPM
-        run: echo "the branch name is $branch_name"
+        run: echo "the branch name is $branch-name"
