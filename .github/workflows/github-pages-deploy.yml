@@ -111,3 +111,12 @@ jobs:
           github_token: ${{ secrets.MY_TOKEN }}
           branch: ${{ env.output_branch }}
           force: true
+  cleanup:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Artifact Cleanup"
+        uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+          expire-in: 7days # Setting this to 0 will delete all artifacts
