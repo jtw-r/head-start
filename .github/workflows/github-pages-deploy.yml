@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  checkout:
+  checkout-dev:
     name: Checkout the dev branch
     runs-on: ubuntu-latest
     steps:
@@ -30,20 +30,47 @@ jobs:
       - name: Upload checkout to workflow artifact
         uses: actions/upload-artifact@v2
         with:
-          name: checkout-artifact
+          name: checkout-output-artifact
+          path: .
+          retention-days: 1
+          if-no-files-found: warn
+  checkout-main:
+    name: Checkout the main branch
+    runs-on: ubuntu-latest
+    steps:
+      # checkout our input branch
+      - name: checkout input branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ env.input_branch }}
+          persist-credentials: false
+      # we can run any git sanity checks, to make sure that everything is up to par
+
+      # once the above tests have passed, we'll upload the branch we checked out to a workflow artifact so that other
+      # jobs can access its results too.
+      - name: Upload checkout to workflow artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: checkout-input-artifact
           path: .
           retention-days: 1
           if-no-files-found: warn
   build:
     name: Build our Branch
-    needs: checkout
+    needs: [checkout-dev, checkout-main]
     runs-on: ubuntu-latest
     steps:
-      # Download the artifact from the previous job ('checkout')
-      - name: Download our checkout artifact
+      # Download the artifact from the previous job ('checkout-dev')
+      - name: Download our checkout-dev artifact
         uses: actions/download-artifact@v2
         with:
-          name: checkout-artifact
+          name: checkout-output-artifact
+      # Download the artifact from the previous job ('checkout-main')
+      - name: Download our checkout-main artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: checkout-input-artifact
+          path: temp
       # Set the node.js version
       - name: Set Node.js version
         uses: actions/setup-node@v1
