@@ -26,6 +26,8 @@ jobs:
         with:
           node-version: 16.11.x
       - name: Get values from NPM
-        run: echo "branch_name=$(npm run-script branch)" >> $GITHUB_ENV
+        run: |
+          b_n=$(npm run-script branch)
+          echo "branch_name=$b_n" >> $GITHUB_ENV
       - name: Echo values from NPM
         run: echo "the branch name is ${{env.branch_name}}"
