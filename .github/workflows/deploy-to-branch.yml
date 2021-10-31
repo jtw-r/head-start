@@ -28,6 +28,10 @@ jobs:
       - name: Get values from NPM
         run: |
           b_n=$(npm run-script branch)
+          echo "$b_n"
+      - name: Get values from NPM
+        run: |
+          b_n=$(npm run-script branch)
           echo "branch_name=$b_n" >> $GITHUB_ENV
       - name: Echo values from NPM
         run: echo "the branch name is ${{env.branch_name}}"
