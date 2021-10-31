@@ -14,11 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # checkout `build` branch
-      - name: checkout test branch
+      - name: checkout build branch
         uses: actions/checkout@v2
         with:
           ref: build
           persist-credentials: false
+          fetch-depth: 1
       # remove all files from the `build` checkout
       # we want to start with a clean slate
       - run: ls
@@ -34,6 +35,7 @@ jobs:
           path: setup
           ref: main
           persist-credentials: false
+          fetch-depth: 1
       # Set the node.js version
       - name: Set Node.js version
         uses: actions/setup-node@v1
