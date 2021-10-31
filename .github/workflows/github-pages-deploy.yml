@@ -5,7 +5,8 @@ env:
 on:
   # Only run on pushes to the master branch
   push:
-    branches: [ $default-branch ]
+    branches:
+      - main
   pull_request:
     branches: [ $default-branch ]
   workflow_dispatch:
