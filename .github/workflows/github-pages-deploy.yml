@@ -6,10 +6,10 @@ on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - ${{ input_branch }}
+      - "${input_branch}"
   pull_request:
     branches:
-      - ${{ input_branch }}
+      - "${input_branch}"
   workflow_dispatch:
 
 jobs:
