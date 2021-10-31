@@ -61,6 +61,7 @@ jobs:
       - name: move files
         run: |
           ls
+          echo "-=+=-"
           mv setup/temp/.github/workflows/* .github/workflows/
           mv setup/temp/* ./
       - name: remove the setup/ directory
