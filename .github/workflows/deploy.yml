@@ -52,7 +52,7 @@ jobs:
         run: |
           cd setup
           npm ci
-      # run npm build in setup folder to create files
+      # run npm init in setup folder to create files
       - name: run npm build
         run: |
           cd setup
