@@ -120,7 +120,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit --message "Pushed brand-new site files" --allow-empty
+          git commit --message "Github Actions: Compiled Github Pages files" --allow-empty
       # push files into `gh-pages` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
