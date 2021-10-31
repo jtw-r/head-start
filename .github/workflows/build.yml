@@ -19,10 +19,10 @@ jobs:
         with:
           ref: build
           persist-credentials: false
-      # remove all files from the `test` checkout
+      # remove all files from the `build` checkout
       # we want to start with a clean slate
       - run: ls
-      - name: remove all files from test branch
+      - name: remove all files from build branch
         run: |
           rm -rf *
           rm -rf .github/
@@ -75,7 +75,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit --message "Github Actions: Built files from the main branch" --allow-empty
-      # push files into `gh-pages` branch
+      # push files into `build` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
