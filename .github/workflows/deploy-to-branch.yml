@@ -25,5 +25,6 @@ jobs:
           node-version: 16.11.x
       - name: Get values from NPM
         env:
-          branch_name: npm run-script branch-name
+          branch_name: |
+            npm run-script branch-name
         run: echo "the branch name is $branch_name"
