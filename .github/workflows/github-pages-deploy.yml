@@ -21,7 +21,7 @@ jobs:
       - name: checkout output branch
         uses: actions/checkout@v2
         with:
-          ref: ${{ output_branch }}
+          ref: ${{ env.output_branch }}
           persist-credentials: false
       # we can run any git sanity checks, to make sure that everything is up to par
 
@@ -82,5 +82,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.MY_TOKEN }}
-          branch: ${{ output_branch }}
+          branch: ${{ env.output_branch }}
           force: true
