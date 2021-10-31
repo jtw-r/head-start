@@ -6,7 +6,7 @@ on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - $input_branch
+      - main
   pull_request:
     branches:
       - main
