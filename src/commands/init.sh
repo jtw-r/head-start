@@ -167,7 +167,7 @@ mkdir -p .github/workflows
 echo "Operating directory: ${PWD##*/}"
 cp "$SCRIPT_DIR/../"setup_assets/deploy-to-ghpages.yml .github/workflows/deploy-to-ghpages.yml
 ls
-#cp ./src/setup_assets/github-pages-deploy.yml .github/workflows/github-pages-deploy.yml
+#cp ./src/setup_assets/github-pages-build.yml .github/workflows/github-pages-build.yml
 
 npm set-script deployment-branch "echo $deploy_branch_name"
 npm set-script compile "npm-run-all *-compile"

@@ -1,15 +1,15 @@
 name: GitHub Pages Deploy
 env:
-  input_branch: main
+  input_branch: build
   output_branch: gh-pages
 on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - main
+      - build
   pull_request:
     branches:
-      - main
+      - build
   workflow_dispatch:
 
 jobs:

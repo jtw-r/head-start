@@ -1,4 +1,4 @@
-name: Build And Deploy to Test Branch
+name: Build And Deploy to "Build" Branch
 on:
   # Only run on pushes to the master branch
   push:
@@ -10,10 +10,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # checkout `test` branch
+      # checkout `main` branch
       - name: checkout test branch
         uses: actions/checkout@v2
         with:
@@ -79,5 +79,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.MY_TOKEN }}
-          branch: test
+          branch: build
           force: true
