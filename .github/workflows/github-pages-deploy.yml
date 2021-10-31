@@ -6,9 +6,10 @@ on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - main
+      - ${{ input_branch }}
   pull_request:
-    branches: [ $default-branch ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
