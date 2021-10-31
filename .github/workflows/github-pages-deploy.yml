@@ -1,64 +1,49 @@
 name: GitHub Pages Deploy
+env:
+  input-branch: main
+  output-branch: dev
 on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - main
+      - $input-branch
   pull_request:
     branches:
-      - main
+      - $input-branch
   workflow_dispatch:
 
 jobs:
-  clear_branch:
-    name: Clear our
+  checkout:
+    name: Checkout the dev branch
     runs-on: ubuntu-latest
     steps:
-      # checkout `dev` branch
-      - name: checkout dev branch
+      # checkout our output branch
+      - name: checkout output branch
         uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: $output-branch
           persist-credentials: false
-      # remove all files from the `dev` checkout
-      # we want to start with a clean slate
-      - run: ls
-      - name: remove all files from dev branch
-        run: |
-          rm -rf *
-          rm -rf .github/
-      - run: ls
-      - name: Commit files for change
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit --message "Cleared files" --allow-empty
-      # push files into `gh-pages` branch
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      # we can run any git sanity checks, to make sure that everything is up to par
+
+      # once the above tests have passed, we'll upload the branch we checked out to a workflow artifact so that other
+      # jobs can access its results too.
+      - name: Upload checkout to workflow artifact
+        uses: actions/upload-artifact@v2
         with:
-          github_token: ${{ secrets.MY_TOKEN }}
-          branch: dev
-          force: true
+          name: checkout-artifact
+          path: .
+          retention-days: 1
+          if-no-files-found: warn
   build:
-    name: Build To Github Pages Branch
-    needs: clear_branch
+    name: Build our Branch
+    needs: checkout
     runs-on: ubuntu-latest
     steps:
-      # checkout `dev` branch
-      - name: checkout dev branch
-        uses: actions/checkout@v2
+      # Download the artifact from the previous job ('checkout')
+      - name: Download our checkout artifact
+        uses: actions/download-artifact@v2
         with:
-          ref: dev
-          persist-credentials: false
-      # checkout `main` branch to the `setup/` directory
-      - name: checkout main branch into the setup/ directory
-        uses: actions/checkout@v2
-        with:
-          path: setup
-          ref: main
-          persist-credentials: false
+          name: checkout-artifact
       # Set the node.js version
       - name: Set Node.js version
         uses: actions/setup-node@v1
@@ -68,31 +53,23 @@ jobs:
       # Get the current versions of node and npm
       - run: node --version
       - run: npm --version
-      - run: ls
-      - run: |
-          cd setup
-          ls
 
-      # go into the setup directory, and setup our node project
-      - name: Install npm dependencies
-        run: |
-          cd setup
-          npm ci
-      # run npm init in setup folder to create files
-      - name: run npm build
-        run: |
-          cd setup
-          npm run init
-      # move the `temp` files into root dir and remove others.
-      - name: move files
-        run: |
-          mkdir -p .github/workflows
-          ls
-          echo "-=+=-"
-          mv setup/temp/.github/workflows/* .github/workflows/
-          mv setup/temp/* ./
-      - name: remove the setup/ directory
-        run: rm -rf setup
+      - name: Upload build output to workflow artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-output-artifact
+          path: .
+          retention-days: 1
+          if-no-files-found: warn
+  deploy:
+    name: Deploy to branch
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download our build output artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-output-artifact
       # commit changes
       - name: Commit files for change
         run: |
@@ -105,5 +82,5 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.MY_TOKEN }}
-          branch: dev
+          branch: $output-branch
           force: true
