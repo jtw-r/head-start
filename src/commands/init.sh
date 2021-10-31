@@ -6,6 +6,9 @@
 #   $1: string  - directory to setup project in (relative to the directory the script is being called in)
 #   $2: flag (b) - bypass mode
 #
+
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 if [ -n "$1" ]
 then
   echo "~making directory"
@@ -15,6 +18,13 @@ then
 else
   echo "~no directory passed"
 fi
+
+echo "Testing!!!!"
+echo "If you get an error below this from NPM about not being able to find the set-script command, please update your NPM version to be >=7.x.x"
+echo "You can run 'npm install -g npm@latest' to fix this issue"
+npm set-script something "something"
+npm set-script something ""
+echo "Done Testing!!!!"
 
 echo "$2"
 bypass=false
@@ -131,9 +141,6 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         echo '' > build/js/index.js
         # Create a tsconfig.json file with the proper directories configured
         tsc --showConfig --rootDir src/ts --outDir build/js --module commonjs > tsconfig.json
-        echo "Testing!!!!"
-        npm set-script something "something"
-        echo "Done Testing!!!!"
         npm set-script ts-compile "tsc --build --force"
         npm run-script ts-compile
         if $file_watchers
@@ -157,14 +164,14 @@ echo "-:-"
 ls
 echo "-:-"
 mkdir -p .github/workflows
-cp ./src/setup_assets/deploy-to-branch.yml .github/workflows/deploy-to-branch.yml
+echo "Operating directory: ${PWD##*/}"
+cp "$SCRIPT_DIR/../"setup_assets/deploy-to-branch.yml .github/workflows/deploy-to-branch.yml
+#cp ./src/setup_assets/deploy-to-branch.yml .github/workflows/deploy-to-branch.yml
 
 npm set-script deployment-branch "echo $deploy_branch_name"
 npm set-script compile "npm-run-all *-compile"
 npm set-script build "npm run-script compile"
 
 echo "-:-"
-cd /../
-ls
 
 exit 0

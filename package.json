@@ -2,14 +2,15 @@
   "name": "head-start",
   "version": "1.0.0",
   "description": "A project setup tool for Node.js",
-  "main": "src/main.sh",
+  "main": "src/cli.sh",
   "scripts": {
-    "test": "bash src/main.sh setup ../temp --bypass",
+    "test": "bash src/commands/test.sh",
+    "init": "bash src/cli.sh init temp/ --bypass",
     "clean": "rm -rf temp/",
-    "test-unin": "bash src/main.sh uninstall a temp"
+    "test-unin": "bash src/cli.sh uninstall a temp"
   },
   "bin": {
-    "head-start": "src/main.sh"
+    "head-start": "src/cli.sh"
   },
   "repository": {
     "type": "git",

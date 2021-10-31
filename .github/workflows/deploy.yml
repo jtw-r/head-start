@@ -30,7 +30,7 @@ jobs:
       - name: checkout main branch into the mn/ directory
         uses: actions/checkout@v2
         with:
-          path: mn
+          path: setup
           ref: main
           persist-credentials: false
       # Set the node.js version
@@ -44,26 +44,24 @@ jobs:
       - run: npm --version
       - run: ls
       - run: |
-          cd mn
+          cd setup
           ls
 
-      # go into the temp directory, and setup our node project
+      # go into the setup directory, and setup our node project
       - name: Install npm dependencies
         run: |
-          cd mn
+          cd setup
           npm ci
-      # run npm build in temp folder to create files
+      # run npm build in setup folder to create files
       - name: run npm build
         run: |
-          cd mn
-          npm run test
+          cd setup
+          npm run init
       # move the `temp` files into root dir and remove others.
       - name: move files
-        run: mv temp/* ./
+        run: mv setup/temp/* ./
       - name: remove the mn/ directory
-        run: rm -rf mn
-      - name: remove the temp/ directory
-        run: rm -rf temp
+        run: rm -rf setup
       # commit changes
       - name: Commit files for change
         run: |
