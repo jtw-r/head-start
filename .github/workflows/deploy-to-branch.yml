@@ -27,7 +27,7 @@ jobs:
           node-version: 16.11.x
       - name: Get values from NPM
         run: |
-          b_n=$(npm run-script branch)
+          npm run-script branch >> $b_n
           echo "$b_n"
       - name: Get values from NPM
         run: |
