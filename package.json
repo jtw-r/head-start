@@ -1,30 +1,23 @@
 {
-  "name": "head-start",
+  "name": "temp",
   "version": "1.0.0",
-  "description": "A project setup tool for Node.js",
-  "main": "src/cli.sh",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "bash src/commands/test.sh",
-    "init": "bash src/cli.sh init temp/ --bypass",
-    "clean": "rm -rf temp/",
-    "test-unin": "bash src/cli.sh uninstall a temp",
-    "branch": "echo 'custom-branch-name'"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "something": "",
+    "ts-compile": "tsc --build --force",
+    "watch-ts": "nodemon --watch src/ts -e ts --exec 'npm run-script ts-compile'",
+    "deployment-branch": "echo gh_pages",
+    "compile": "npm-run-all *-compile",
+    "build": "npm run-script compile"
   },
-  "bin": {
-    "head-start": "src/cli.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jtw-r/head-start.git"
-  },
-  "keywords": [
-    "project",
-    "structure"
-  ],
-  "author": "jtw-r",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jtw-r/head-start/issues"
-  },
-  "homepage": "https://github.com/jtw-r/head-start#readme"
+  "devDependencies": {
+    "nodemon": "^2.0.14",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^4.4.4"
+  }
 }

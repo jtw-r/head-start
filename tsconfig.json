@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "rootDir": "./src/ts",
+        "outDir": "./build/js",
+        "module": "commonjs"
+    },
+    "files": [
+        "./src/ts/index.ts"
+    ]
+}
