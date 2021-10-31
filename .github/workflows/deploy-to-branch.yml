@@ -12,9 +12,18 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      test: "Hello"
     steps:
-      - name: Test
-        run: |
-          echo $test
+      - name: checkout main branch into the setup/ directory
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          persist-credentials: false
+      # Set the node.js version
+      - name: Set Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.11.x
+      - name: Get values from NPM
+        run: echo $branch_name
+        env:
+          branch_name: npm run-script branch-name
