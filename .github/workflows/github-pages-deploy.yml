@@ -95,9 +95,12 @@ jobs:
       - run: node --version
       - run: npm --version
 
+      - run: ls
+
       - name: Compile Site
         run: |
           cd out
+          npm run
           npm run-script compile
 
       - name: Upload build output to workflow artifact
