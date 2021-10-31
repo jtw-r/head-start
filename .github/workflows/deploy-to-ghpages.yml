@@ -35,7 +35,10 @@ jobs:
         with:
           ref: ${{ env.output_branch }}
           persist-credentials: false
-      # we can run any git sanity checks, to make sure that everything is up to par
+
+      - name: clean branch
+        run: |
+          rm -rf *
 
       # once the above tests have passed, we'll upload the branch we checked out to a workflow artifact so that other
       # jobs can access its results too.
