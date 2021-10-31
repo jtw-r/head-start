@@ -13,8 +13,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  cleanup:
+    name: Cleanup from previous run
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Artifact Cleanup"
+        uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+          expire-in: 0 # Setting this to 0 will delete all artifacts
   checkout-dev:
     name: Checkout the dev branch
+    needs:
+      - cleanup
     runs-on: ubuntu-latest
     steps:
       # checkout our output branch
@@ -36,6 +47,8 @@ jobs:
           if-no-files-found: warn
   checkout-main:
     name: Checkout the main branch
+    needs:
+      - cleanup
     runs-on: ubuntu-latest
     steps:
       # checkout our input branch
@@ -111,12 +124,3 @@ jobs:
           github_token: ${{ secrets.MY_TOKEN }}
           branch: ${{ env.output_branch }}
           force: true
-  cleanup:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Artifact Cleanup"
-        uses: kolpav/purge-artifacts-action@v1
-        with:
-          token: ${{ secrets.MY_TOKEN }}
-          expire-in: 0 # Setting this to 0 will delete all artifacts
