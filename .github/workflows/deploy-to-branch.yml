@@ -28,4 +28,4 @@ jobs:
       - name: Get values from NPM
         run: npm run-script branch-name >> $GITHUB_ENV
       - name: Echo values from NPM
-          run: echo "the branch name is $branch_name"
+        run: echo "the branch name is $branch_name"
