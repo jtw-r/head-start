@@ -61,7 +61,7 @@ jobs:
       - name: move files
         run: |
           mv setup/temp/* ./
-          mv setup/temp/.github/* ./.github/
+          mv setup/temp/.github/workflows/* ./.github/workflows/
       - name: remove the setup/ directory
         run: rm -rf setup
       # commit changes
