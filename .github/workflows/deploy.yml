@@ -60,8 +60,8 @@ jobs:
       # move the `temp` files into root dir and remove others.
       - name: move files
         run: |
-          mv setup/temp/* ./
           mv setup/temp/.github/workflows/* ./.github/workflows/
+          mv setup/temp/* ./
       - name: remove the setup/ directory
         run: rm -rf setup
       # commit changes
