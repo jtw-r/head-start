@@ -126,7 +126,7 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         ;;
       scss | sass)
         # We are using scss so we need to install sass!
-        npm i node-sass --save-dev
+        npm i node-sass --save-dev --quiet
         mkdir "src/scss"
         mkdir "build/css"
         # pre-populate folders
@@ -139,7 +139,7 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         fi
         ;;
       ts | typescript)
-        npm i typescript --save-dev
+        npm i typescript --save-dev --quiet
         mkdir "src/ts"
         mkdir "build/js"
         # pre-populate folders
