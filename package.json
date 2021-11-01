@@ -8,7 +8,8 @@
     "something": "",
     "ts-compile": "tsc --build --force",
     "watch-ts": "nodemon --watch src/ts -e ts --exec 'npm run-script ts-compile'",
-    "deployment-branch": "echo gh_pages",
+    "scss-compile": "node-sass --output-style expanded --source-map true --source-map-contents true --precision 5 src/scss/ -o build/css/",
+    "watch-scss": "nodemon --watch src/scss -e scss --exec 'npm run-script css-compile'",
     "compile": "npm-run-all *-compile",
     "build": "npm run-script compile"
   },
@@ -16,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "node-sass": "^6.0.1",
     "nodemon": "^2.0.14",
     "npm-run-all": "^4.1.5",
     "typescript": "^4.4.4"

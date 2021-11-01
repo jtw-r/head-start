@@ -35,10 +35,12 @@ jobs:
         with:
           ref: ${{ env.output_branch }}
           persist-credentials: false
+          fetch-depth: 1
 
       - name: clean branch
         run: |
           rm -rf *
+          rm -rf .github/
 
       # once the above tests have passed, we'll upload the branch we checked out to a workflow artifact so that other
       # jobs can access its results too.
@@ -59,6 +61,7 @@ jobs:
       - name: checkout input branch
         uses: actions/checkout@v2
         with:
+          fetch-depth: 1
           ref: ${{ env.input_branch }}
           persist-credentials: false
       # we can run any git sanity checks, to make sure that everything is up to par
