@@ -90,7 +90,7 @@ npm i npm-run-all --save-dev
 
 if $bypass
 then
-  types_raw="ts"
+  types_raw="ts;scss"
   file_watchers=true
 else
   echo "What types of files will you be using? (Please separate types with ; )"
@@ -117,14 +117,20 @@ mkdir "build"
 for i in "${TYPES_ARR[@]}"; do   # access each element of array
     echo "Type : $i"
     case $i in
+      html)
+        mkdir "build/css"
+        mkdir "build/html"
+        # pre-populate folders
+        echo '' > build/css/style.css
+        echo '' > build/html/index.html
+        ;;
       scss | sass)
         # We are using scss so we need to install sass!
         npm i node-sass --save-dev
         mkdir "src/scss"
         mkdir "build/css"
         # pre-populate folders
-        echo '' > src/scss/style.scss
-        echo '' > build/css/style.css
+        cp "$SCRIPT_DIR/../"setup_assets/scss/* src/scss/
         npm set-script scss-compile "node-sass --output-style expanded --source-map true --source-map-contents true --precision 5 src/scss/ -o build/css/"
         if $file_watchers
         then
@@ -166,13 +172,9 @@ echo "-:-"
 mkdir -p .github/workflows
 echo "Operating directory: ${PWD##*/}"
 cp "$SCRIPT_DIR/../"setup_assets/deploy-to-ghpages.yml .github/workflows/deploy-to-ghpages.yml
-ls
-#cp ./src/setup_assets/github-pages-build.yml .github/workflows/github-pages-build.yml
 
-npm set-script deployment-branch "echo $deploy_branch_name"
 npm set-script compile "npm-run-all *-compile"
 npm set-script build "npm run-script compile"
 
-echo "-:-"
 
 exit 0
