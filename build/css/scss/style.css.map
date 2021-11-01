@@ -1,0 +1,30 @@
+{
+	"version": 3,
+	"file": "style.css",
+	"sources": [
+		"../../../src/scss/scss/style.scss",
+		"../../../src/scss/scss/utilities/_utilities.scss",
+		"../../../src/scss/scss/utilities/_functions.scss",
+		"../../../src/scss/scss/utilities/_mixins.scss",
+		"../../../src/scss/scss/utilities/_variables.scss",
+		"../../../src/scss/scss/base/_base.scss",
+		"../../../src/scss/scss/components/_components.scss",
+		"../../../src/scss/scss/layout/_layout.scss",
+		"../../../src/scss/scss/pages/_pages.scss",
+		"../../../src/scss/scss/theme/_theme.scss"
+	],
+	"sourcesContent": [
+		"@import \"utilities/utilities\";\n@import \"base/base\";\n@import \"components/components\";\n@import \"layout/layout\";\n@import \"pages/pages\";\n@import \"theme/theme\";\n",
+		"// Utilities\n@import \"functions\";\n@import \"mixins\";\n@import \"variables\";",
+		"",
+		"",
+		"",
+		"// Base",
+		"// Components",
+		"",
+		"",
+		""
+	],
+	"names": [],
+	"mappings": ""
+}
