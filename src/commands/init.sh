@@ -14,7 +14,7 @@ then
   echo "~making directory"
   mkdir "$1"
   cd "$1"
-  npm init -y
+  npm init -y &> /dev/null
 else
   echo "~no directory passed"
 fi
@@ -82,11 +82,9 @@ else
 fi
 
 git branch "$deploy_branch_name"
-echo "Branches:"
-git branch --list
 
 # Install a few dev dependencies
-npm i npm-run-all --save-dev
+npm i npm-run-all --save-dev &>/dev/null
 
 if $bypass
 then
@@ -105,6 +103,11 @@ else
       file_watchers=false
       ;;
   esac
+fi
+
+if $file_watchers
+then
+  npm i nodemon --save-dev &>/dev/null
 fi
 
 
@@ -126,20 +129,21 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         ;;
       scss | sass)
         # We are using scss so we need to install sass!
-        npm i node-sass --save-dev --quiet
+        npm i node-sass --save-dev &>/dev/null
         mkdir "src/scss"
         mkdir "build/css"
         # pre-populate folders
-        cp "$SCRIPT_DIR/../"setup_assets/scss/* src/scss/
+        cp -r "$SCRIPT_DIR/../"setup_assets/scss/ src/scss/
+        # Create our scss compile script in our package.json file
         npm set-script scss-compile "node-sass --output-style expanded --source-map true --source-map-contents true --precision 5 src/scss/ -o build/css/"
+        npm run-script scss-compile
         if $file_watchers
         then
-          npm i nodemon --save-dev
           npm set-script watch-scss "nodemon --watch src/scss -e scss --exec 'npm run-script css-compile'"
         fi
         ;;
       ts | typescript)
-        npm i typescript --save-dev --quiet
+        npm i typescript --save-dev &>/dev/null
         mkdir "src/ts"
         mkdir "build/js"
         # pre-populate folders
@@ -147,11 +151,11 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
         echo '' > build/js/index.js
         # Create a tsconfig.json file with the proper directories configured
         tsc --showConfig --rootDir src/ts --outDir build/js --module commonjs > tsconfig.json
+        # Create our ts compile script in our package.json file
         npm set-script ts-compile "tsc --build --force"
         npm run-script ts-compile
         if $file_watchers
         then
-          npm i nodemon --save-dev
           npm set-script watch-ts "nodemon --watch src/ts -e ts --exec 'npm run-script ts-compile'"
         fi
         ;;
@@ -165,12 +169,7 @@ for i in "${TYPES_ARR[@]}"; do   # access each element of array
 done
 
 # Deploy time!!
-echo "-:-"
-echo "-:-"
-ls
-echo "-:-"
 mkdir -p .github/workflows
-echo "Operating directory: ${PWD##*/}"
 cp "$SCRIPT_DIR/../"setup_assets/deploy-to-ghpages.yml .github/workflows/deploy-to-ghpages.yml
 
 npm set-script compile "npm-run-all *-compile"
