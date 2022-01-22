@@ -1,17 +1,20 @@
 {
-  "name": "head-start",
+  "name": "@thejonnyr/head-start",
   "version": "1.0.0",
   "description": "A project setup tool for Node.js",
-  "main": "src/cli.sh",
+  "main": "src/cli.js",
   "scripts": {
-    "test": "bash src/commands/test.sh",
-    "init": "bash src/cli.sh init temp/ --bypass",
+    "test": "node src/cli.js init temp/",
+    "init": "bash src/cli.js init temp/ --bypass",
     "clean": "rm -rf temp/",
     "test-unin": "bash src/cli.sh uninstall a temp",
-    "branch": "echo 'custom-branch-name'"
+    "branch": "echo 'custom-branch-name'",
+    "ts-compile": "tsc --build --force",
+    "watch-ts": "nodemon --watch src/ts -e ts --exec 'npm run-script ts-compile'",
+    "build": "snowpack build"
   },
   "bin": {
-    "head-start": "src/cli.sh"
+    "head-start": "src/cli.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +29,16 @@
   "bugs": {
     "url": "https://github.com/jtw-r/head-start/issues"
   },
-  "homepage": "https://github.com/jtw-r/head-start#readme"
+  "homepage": "https://github.com/jtw-r/head-start#readme",
+  "devDependencies": {
+    "@snowpack/plugin-typescript": "^1.2.1",
+    "@types/node": "^17.0.10",
+    "snowpack": "^3.8.8",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "prompt-sync": "^4.2.0",
+    "yargs": "^17.3.1"
+  }
 }

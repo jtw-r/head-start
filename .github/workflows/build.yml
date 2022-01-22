@@ -13,17 +13,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # checkout `build` branch
-      - name: checkout build branch
+      # checkout `dist` branch
+      - name: checkout dist branch
         uses: actions/checkout@v2
         with:
-          ref: build
+          ref: dist
           persist-credentials: false
           fetch-depth: 1
-      # remove all files from the `build` checkout
+      # remove all files from the `dist` checkout
       # we want to start with a clean slate
       - run: ls
-      - name: remove all files from build branch
+      - name: remove all files from dist branch
         run: |
           rm -rf *
           rm -rf .github/
@@ -56,7 +56,7 @@ jobs:
           cd setup
           npm ci
       # run npm init in setup folder to create files
-      - name: run npm build
+      - name: run npm dist
         run: |
           cd setup
           npm run init
@@ -77,10 +77,10 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit --message "Github Actions: Built files from the main branch" --allow-empty
-      # push files into `build` branch
+      # push files into `dist` branch
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.MY_TOKEN }}
-          branch: build
+          branch: dist
           force: true

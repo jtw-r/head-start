@@ -32,7 +32,7 @@ case $mode in
     case $consent in
       "y" | "yes" | "true")
         echo "Removing files"
-        rm -rf ${directory}src/ ${directory}build/ ${directory}node_modules/ ${directory}package.json ${directory}package-lock.json ${directory}tsconfig.json
+        rm -rf ${directory}src/ ${directory}dist/ ${directory}node_modules/ ${directory}package.json ${directory}package-lock.json ${directory}tsconfig.json
         exit 0
         ;;
       "n" | "no" | "false")

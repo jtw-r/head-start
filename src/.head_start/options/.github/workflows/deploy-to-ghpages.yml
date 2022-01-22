@@ -1,15 +1,15 @@
 name: GitHub Pages Deploy
 env:
-  input_branch: build
+  input_branch: dist
   output_branch: gh-pages
 on:
   # Only run on pushes to the master branch
   push:
     branches:
-      - build
+      - dist
   pull_request:
     branches:
-      - build
+      - dist
   workflow_dispatch:
 
 jobs:
@@ -104,22 +104,22 @@ jobs:
         run: |
           rm -rf node_modules/
 
-      - name: Upload build output to workflow artifact
+      - name: Upload dist output to workflow artifact
         uses: actions/upload-artifact@v2
         with:
-          name: build-output-artifact
+          name: dist-output-artifact
           path: .
           retention-days: 1
           if-no-files-found: warn
   deploy:
     name: Deploy to branch
-    needs: build
+    needs: dist
     runs-on: ubuntu-latest
     steps:
-      - name: Download our build output artifact
+      - name: Download our dist output artifact
         uses: actions/download-artifact@v2
         with:
-          name: build-output-artifact
+          name: dist-output-artifact
       # commit changes
       - name: Commit files for change
         run: |
