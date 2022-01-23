@@ -17,14 +17,11 @@ If you ever want to completely uninstall the tool, or remove all traces of it in
 ## Install/First Run
 You've most likely gotten this from a template.
 ```shell
-# Open up your terminal and navigate to your project root (where the shell/node scripts are located).
+# Open up your terminal and navigate to your project root (where the .js scripts are located).
 # Run the cli script
 
-# If you are using bash/shell
-$ bash cli.sh <mode: (initialize, integrate, help, uninstall)> <arg2> <arg3>
-
 # If you are using Node
-$ node cli.cjs <mode: (initialize, integrate, help, uninstall)> <arg2> <arg3>
+$ node cli.js init --welcome
 ```
 
 You can also run a script with the parameters set already
