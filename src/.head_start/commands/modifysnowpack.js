@@ -7,10 +7,13 @@ const util = require("util");
 const yargs = require("yargs");
 require('yargs/yargs')(process.argv.slice(2))
   .command(
-    "add <plugin>",
+    "add <plugin> <config>",
     "Adds a new plugin to the snowpack.config.js file",
     (yargs) => {
       yargs.positional( "plugin", {
+        type: "string"
+      })
+      .positional( "config_path", {
         type: "string"
       })
     },
@@ -22,7 +25,7 @@ require('yargs/yargs')(process.argv.slice(2))
       spc.plugins.push(args["plugin"]);
 
       // Re-write the config
-      rewrite_snowpack_config(spc)
+      rewrite_snowpack_config(spc, args["config_path"])
 
     }
   ).demandCommand()
