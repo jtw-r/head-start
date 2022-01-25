@@ -43,6 +43,22 @@ exports.Question = function (_input, _default) {
   })();
 };
 
+exports.Run = function (_command, _directory = process.cwd()) {
+  const child_process = require("child_process");
+  child_process.exec(_command, { cwd: _directory }, (error, stdout, stderr) => {
+    if (error) {
+      exports.Error(
+        "Error occurred while executing command: `" +
+          _command +
+          "` in directory: " +
+          _directory
+      );
+    } else if (stdout) {
+      exports.Line(stdout);
+    }
+  });
+};
+
 function stdout(_line = "", _type = "log") {
   switch (_type) {
     default:

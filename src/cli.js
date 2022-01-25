@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-let o = require("./commands/functions/txtutils");
+let o = require("./functions/util/txtutils");
 require("yargs/yargs")(process.argv.slice(2))
   .command(
     "*",
