@@ -2,12 +2,13 @@
   "name": "@thejonnyr/head-start",
   "version": "1.0.0",
   "description": "A project setup tool for Node.js",
-  "main": "src/cli.js",
+  "main": "src/cli.ts",
   "scripts": {
-    "test": "node src/cli.js init temp/",
-    "init": "bash src/cli.js init temp/ --bypass",
+    "test": "node dist/cli.js init temp/",
+    "prebuild": "npm-run-all prebuild-*",
+    "prebuild-format": "npm run prettier-src",
     "build": "npm-run-all build-*",
-    "build-cli": "esbuild src/cli.js --bundle --outfile=dist/cli.js --platform=node --external:./node_modules/*",
+    "build-cli": "esbuild src/cli.ts --bundle --outfile=dist/cli.js --platform=node --external:./node_modules/*",
     "build-dot-folder": "cp -R src/resources/.head_start dist/",
     "prettier-src": "npx prettier --write . src/"
   },

@@ -16,7 +16,7 @@ require("yargs/yargs")(process.argv.slice(2))
     }
   )
   .hide("*")
-  /*.commandDir("./commands", { extensions: ["js"] })*/
+  /*.commandDir("./commands", { extensions: ["ts"] })*/
   .command(require("./commands/init"))
   .command(require("./commands/uninstall"))
   .command(require("./commands/update_cli"))

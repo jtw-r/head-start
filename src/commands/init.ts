@@ -157,10 +157,17 @@ exports.handler = function (argv) {
 
   switch (express_app_prompt().toLowerCase()) {
     default:
-    case "n" | "no" | "nope" | "false":
+    case "n":
+    case "no":
+    case "nope":
+    case "false":
       project_express_app = false;
       break;
-    case "y" | "yes" | "yep" | "true" | "yessir":
+    case "y":
+    case "yes":
+    case "yep":
+    case "true":
+    case "yessir":
       project_express_app = true;
       break;
   }
@@ -173,10 +180,17 @@ exports.handler = function (argv) {
 
   switch (typescript_prompt().toLowerCase()) {
     default:
-    case "n" | "no" | "nope" | "false":
+    case "n":
+    case "no":
+    case "nope":
+    case "false":
       project_typescript = false;
       break;
-    case "y" | "yes" | "yep" | "true" | "yessir":
+    case "y":
+    case "yes":
+    case "yep":
+    case "true":
+    case "yessir":
       project_typescript = true;
       break;
   }
