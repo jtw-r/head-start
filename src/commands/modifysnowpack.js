@@ -1,7 +1,7 @@
 #!usr/bin/env node
 
 const o = require("./functions/txtutils");
-const spc = require("../base/snowpack.config");
+const spc = require("../resources/.head_start/base/snowpack.config");
 const fs = require("fs");
 const util = require("util");
 const yargs = require("yargs");
