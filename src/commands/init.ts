@@ -57,10 +57,17 @@ exports.handler = function (argv) {
     o.Line(
       "You've specified your current working directory as your project root. Is this correct?"
     );
-    o.Line("Hello");
     o.Empty();
     o.Line(process.cwd().toString());
-    if (o.Question("^ (Y/n) ", "y").toLowerCase() === "n") {
+    if (
+      o
+        .Question({
+          prompt: "^ (Y/n) ",
+          prompt_type: QuestionTypes.Select_Boolean,
+          default_value: true,
+        })
+        .getValue() === false
+    ) {
       // No
       project_directory = path.resolve(
         o
@@ -80,10 +87,23 @@ exports.handler = function (argv) {
     );
     o.Empty();
     o.Line(path.resolve(argv["d"]));
-    if (o.Question("^ (Y/n) ", "y").toLowerCase() === "n") {
+    if (
+      o
+        .Question({
+          prompt: "^ (Y/n) ",
+          prompt_type: QuestionTypes.Select_Boolean,
+          default_value: true,
+        })
+        .getValue() === false
+    ) {
       // No
       project_directory = path.resolve(
-        o.Question("Which directory would you like to use instead? ")
+        o
+          .Question({
+            prompt: "Which directory would you like to use instead? ",
+            prompt_type: QuestionTypes.Input_String,
+          })
+          .getValue()
       );
     } else {
       // Yes
@@ -158,50 +178,26 @@ exports.handler = function (argv) {
   ]);
 
   let express_app_prompt = () => {
-    return o.Question("Is your project an Electron.js app? (y/N) ", "n");
+    return o.Question({
+      prompt: "Is your project an Electron.js app? (y/N) ",
+      prompt_type: QuestionTypes.Select_Boolean,
+      default_value: false,
+    });
   };
 
   let project_express_app;
 
-  switch (express_app_prompt().toLowerCase()) {
-    default:
-    case "n":
-    case "no":
-    case "nope":
-    case "false":
-      project_express_app = false;
-      break;
-    case "y":
-    case "yes":
-    case "yep":
-    case "true":
-    case "yessir":
-      project_express_app = true;
-      break;
-  }
+  project_express_app = express_app_prompt().getValue();
 
   let typescript_prompt = () => {
-    return o.Question("Is your project using TypeScript? (y/N) ", "n");
+    return o.Question({
+      prompt: "Is your project using TypeScript? (y/N) ",
+      prompt_type: QuestionTypes.Select_Boolean,
+      default_value: false,
+    });
   };
 
-  let project_typescript;
-
-  switch (typescript_prompt().toLowerCase()) {
-    default:
-    case "n":
-    case "no":
-    case "nope":
-    case "false":
-      project_typescript = false;
-      break;
-    case "y":
-    case "yes":
-    case "yep":
-    case "true":
-    case "yessir":
-      project_typescript = true;
-      break;
-  }
+  let project_typescript = typescript_prompt().getValue();
 
   let framework_prompt = () => {
     o.Line("Will you be using any of the following JavaScript frameworks?");
@@ -224,7 +220,14 @@ exports.handler = function (argv) {
       "Vite.js",
       "Vue.js",
     ]);
-    let framework = o.Question("(please specify which one) ", "").toLowerCase();
+    let framework = o
+      .Question({
+        prompt: "(please specify which one) ",
+        prompt_type: QuestionTypes.Input_String,
+        default_value: "",
+      })
+      .getValue()
+      .toString();
     if (framework.length > 0 && framework !== "none") {
       o.Line("Adding Framework: " + framework);
       o.Line(path.resolve(__dirname));

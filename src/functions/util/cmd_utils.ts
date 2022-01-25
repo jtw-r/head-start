@@ -90,6 +90,8 @@ export function Question(opts: QuestionOptions): Answer {
         case "t":
         case "true":
         case "correct":
+        case "+":
+        case "positive":
           a.addResponse(true);
           break;
         case "n":
@@ -100,6 +102,8 @@ export function Question(opts: QuestionOptions): Answer {
         case "f":
         case "false":
         case "incorrect":
+        case "-":
+        case "negative":
           a.addResponse(false);
           break;
         case ":q":
