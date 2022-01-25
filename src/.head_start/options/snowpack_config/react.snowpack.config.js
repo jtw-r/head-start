@@ -4,22 +4,18 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
-    public: { url: '/', static: true },
-    src: { url: '/dist' },
+    public: { url: "/", static: true },
+    src: { url: "/dist" },
   },
-  plugins: [
-    '@snowpack/plugin-sass'
-  ],
+  plugins: ["@snowpack/plugin-sass"],
   packageOptions: {
     /* ... */
   },
   devOptions: {
-    out: "test"
+    out: "test",
   },
   buildOptions: {
-    out: "dist"
+    out: "dist",
   },
-  exclude: [
-    '**/node_modules/**/*'
-  ],
+  exclude: ["**/node_modules/**/*"],
 };

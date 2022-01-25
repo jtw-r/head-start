@@ -1,0 +1,4 @@
+class Project {
+  name;
+  directory;
+}

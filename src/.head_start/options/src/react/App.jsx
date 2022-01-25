@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
   // Return the App component.
-  return (
-    <>
-    </>
-  );
+  return <></>;
 }
 
 export default App;
