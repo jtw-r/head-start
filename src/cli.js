@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-let o = require("./functions/util/txtutils");
+let o = require("./functions/util/cmd_utils");
 require("yargs/yargs")(process.argv.slice(2))
   .command(
     "*",
@@ -16,6 +16,10 @@ require("yargs/yargs")(process.argv.slice(2))
     }
   )
   .hide("*")
-  .commandDir(".head_start/commands", { extensions: ["js"] })
+  /*.commandDir("./commands", { extensions: ["js"] })*/
+  .command(require("./commands/init"))
+  .command(require("./commands/uninstall"))
+  .command(require("./commands/update_cli"))
+  .command(require("./commands/update_project"))
   .help()
   .wrap(90).argv;

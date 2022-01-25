@@ -1,4 +1,4 @@
-const o = require("../functions/util/txtutils");
+const o = require("../functions/util/cmd_utils");
 const path = require("path");
 const fs = require("fs");
 const fse = require("fs-extra");
