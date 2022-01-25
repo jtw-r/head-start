@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-let o = require("./functions/util/cmd_utils");
+let o = require("./functions/util/cmd_utils.js");
 require("yargs/yargs")(process.argv.slice(2))
   .command(
     "*",

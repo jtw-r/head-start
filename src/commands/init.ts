@@ -1,4 +1,6 @@
-const o = require("../functions/util/cmd_utils");
+import * as o from "../functions/util/cmd_utils.js";
+import { QuestionTypes } from "../functions/util/cmd_utils.js";
+
 const path = require("path");
 const fs = require("fs");
 const fse = require("fs-extra");
@@ -55,12 +57,18 @@ exports.handler = function (argv) {
     o.Line(
       "You've specified your current working directory as your project root. Is this correct?"
     );
+    o.Line("Hello");
     o.Empty();
-    o.Line(path.resolve(process.cwd()));
+    o.Line(process.cwd().toString());
     if (o.Question("^ (Y/n) ", "y").toLowerCase() === "n") {
       // No
       project_directory = path.resolve(
-        o.Question("Which directory would you like to use instead? ")
+        o
+          .Question({
+            prompt: "Which directory would you like to use instead? ",
+            prompt_type: QuestionTypes.Input_String,
+          })
+          .getValue()
       );
     } else {
       // Yes
