@@ -15,8 +15,7 @@ require("yargs/yargs")(process.argv.slice(2))
   .command(
     "*",
     false,
-    () => {
-    },
+    () => {},
     (argv) => {
       c.Empty();
       c.Divider();

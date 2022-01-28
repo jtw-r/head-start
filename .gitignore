@@ -106,6 +106,6 @@ dist
 /.vscode/
 
 /temp/
-src/resources/.head_start/options/.DS_Store
+resources/.head_start/options/.DS_Store
 
 *.DS_Store
