@@ -78,52 +78,30 @@ class Answer {
 
 export function Question(opts: QuestionOptions): Answer {
   const prompt = require("prompt-sync")({ sigint: true });
+  const t = require("txt_utils");
   let a = new Answer();
   switch (opts.prompt_type) {
     case QuestionTypes.Select_Boolean:
-      let response = prompt(opts.prompt, opts.default_value);
-      switch (response.toLowerCase()) {
-        case "y":
-        case "yes":
-        case "yep":
-        case "yessir":
-        case "t":
-        case "true":
-        case "correct":
-        case "+":
-        case "positive":
-          a.addResponse(true);
-          break;
-        case "n":
-        case "no":
-        case "nope":
-        case "nah":
-        case "nosir":
-        case "f":
-        case "false":
-        case "incorrect":
-        case "-":
-        case "negative":
-          a.addResponse(false);
-          break;
-        case ":q":
+      let response = prompt(opts.prompt, opts.default_value).toLowerCase();
+      if (response === ":q" || response === ":quit") {
+        a.addResponse("");
+      } else if (response === "") {
+        if (t.parse_string_to_boolean(opts.default_value) !== null) {
+          a.addResponse(t.parse_string_to_boolean(opts.default_value));
+        } else {
           a.addResponse("");
-          return null;
-        default:
-          /* Oh god what the fuck is this.......  */
-          if (response.toLowerCase === "") {
-            a.addResponse(opts.default_value);
-          } else {
-            Line("Unknown input passed. Please try again");
-            a.addResponse(
-              Question({
-                prompt: "",
-                prompt_type: opts.prompt_type,
-                default_value: opts.default_value,
-              }).getValue()
-            );
-          }
-          break;
+        }
+      } else if (t.parse_string_to_boolean(response) === null) {
+        Line("Unknown input passed. Please try again");
+        a.addResponse(
+          Question({
+            prompt: "",
+            prompt_type: opts.prompt_type,
+            default_value: opts.default_value,
+          }).getValue()
+        );
+      } else {
+        a.addResponse(t.parse_string_to_boolean(response));
       }
       break;
     case QuestionTypes.Select_Single:
