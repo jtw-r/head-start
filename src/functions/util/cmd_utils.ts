@@ -78,7 +78,7 @@ class Answer {
 
 export function Question(opts: QuestionOptions): Answer {
   const prompt = require("prompt-sync")({ sigint: true });
-  const t = require("txt_utils");
+  const t = require("./txt_utils");
   let a = new Answer();
   switch (opts.prompt_type) {
     case QuestionTypes.Select_Boolean:
