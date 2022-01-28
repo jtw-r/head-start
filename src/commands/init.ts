@@ -122,15 +122,16 @@ async function ask_questions(argv) {
 
   await c
     .Question({
-      prompt: "^ (Y/n) ",
+      prompt: "",
       prompt_type: QuestionTypes.Select_Boolean,
       default_value: true,
     })
     .then((answer) => {
+      console.log(answer.getValue());
       if (answer.getValue() === false) {
         // No
         return choose_directory().then((value) => {
-          project_directory = path.resolve(value);
+          project_directory = path.resolve(value.getValue());
         });
       } else {
         // Yes

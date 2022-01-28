@@ -53,22 +53,20 @@ interface QuestionOptions {
 class Answer {
   type: QuestionTypes;
   responses: {
-    selection_id?: number;
+    index: number;
     value: string | number | boolean;
   }[];
 
   constructor(_type, _responses = []) {
     this.type = _type;
-    this.responses = [];
+    this.responses = _responses;
   }
 
   getValue() {
     if (this.responses === undefined) {
       Error("Error getting answer value!");
-      console.log(this);
-    }
-
-    if (this.responses.length >= 1) {
+      throw this;
+    } else if (this.responses.length >= 1) {
       return this.responses[0].value;
     } else {
       return {};
@@ -82,7 +80,7 @@ class Answer {
   }
 
   addResponse(_value, _section_id = 0) {
-    this.responses.push({ selection_id: _section_id, value: _value });
+    this.responses.push({ index: _section_id, value: _value });
   }
 }
 
@@ -90,45 +88,51 @@ export async function Question(opts: QuestionOptions): Promise<Answer> {
   const prompts = require("prompts");
   const t = require("./txt_utils");
 
-  let a = new Answer(opts.prompt_type);
   switch (opts.prompt_type) {
     case QuestionTypes.Select_Boolean:
-      await prompts({
+      return await prompts({
         type: "confirm",
         name: "value",
         message: opts.prompt,
         initial: t.parse_string_to_boolean(opts.default_value),
       })
         .then((_resp) => {
-          a.addResponse(_resp.value);
-          console.log(_resp.value);
-          return a;
+          return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
         })
         .catch((reason) => {
           Error(reason);
         });
-      break;
     case QuestionTypes.Select_Single:
       break;
     case QuestionTypes.Select_Multiple:
       break;
     case QuestionTypes.Input_String:
+      return await prompts({
+        type: "text",
+        name: "value",
+        message: opts.prompt,
+        initial: opts?.default_value,
+      })
+        .then((_resp) => {
+          return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
+        })
+        .catch((reason) => {
+          Error(reason);
+        });
     case QuestionTypes.Input_Number:
-      await prompts({
-        type: "confirm",
+      return await prompts({
+        type: "number",
         name: "value",
         message: opts.prompt,
         initial: opts.default_value,
       })
         .then((_resp) => {
-          a.addResponse(_resp.value);
-          return a;
+          return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
         })
         .catch((reason) => {
           Error(reason);
         });
   }
-  return a;
 }
 
 export function Object(_object: {}, _name?: string): void {
