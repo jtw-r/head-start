@@ -208,5 +208,15 @@ function stdout(
   _line: string | number | boolean = "",
   _style: STDOUT_STYLE = { modifier: STDOUT_MODIFIERS.Reset }
 ): void {
-  console.log(_style, _line);
+  let style_glob = "";
+  if (_style.modifier !== undefined) {
+    style_glob += _style.modifier;
+  }
+  if (_style.foreground_colour !== undefined) {
+    style_glob += _style.foreground_colour;
+  }
+  if (_style.background_colour !== undefined) {
+    style_glob += _style.background_colour;
+  }
+  console.log(style_glob, _line);
 }
