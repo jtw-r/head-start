@@ -1,4 +1,4 @@
-import * as o from "../functions/util/cmd_utils.js";
+import * as c from "../functions/util/cmd_utils.js";
 import { QuestionTypes } from "../functions/util/cmd_utils.js";
 
 const path = require("path");
@@ -54,13 +54,13 @@ exports.handler = function (argv) {
   let project_directory = "";
   let dot_directory = "";
   if (argv["d"] === ".") {
-    o.Line(
+    c.Line(
       "You've specified your current working directory as your project root. Is this correct?"
     );
-    o.Empty();
-    o.Line(process.cwd().toString());
+    c.Empty();
+    c.Line(process.cwd().toString());
     if (
-      o
+      c
         .Question({
           prompt: "^ (Y/n) ",
           prompt_type: QuestionTypes.Select_Boolean,
@@ -70,7 +70,7 @@ exports.handler = function (argv) {
     ) {
       // No
       project_directory = path.resolve(
-        o
+        c
           .Question({
             prompt: "Which directory would you like to use instead? ",
             prompt_type: QuestionTypes.Input_String,
@@ -82,13 +82,13 @@ exports.handler = function (argv) {
       project_directory = path.resolve(process.cwd());
     }
   } else {
-    o.Line(
+    c.Line(
       "Below is the directory you've specified for your project root. Is this correct?"
     );
-    o.Empty();
-    o.Line(path.resolve(argv["d"]));
+    c.Empty();
+    c.Line(path.resolve(argv["d"]));
     if (
-      o
+      c
         .Question({
           prompt: "^ (Y/n) ",
           prompt_type: QuestionTypes.Select_Boolean,
@@ -98,7 +98,7 @@ exports.handler = function (argv) {
     ) {
       // No
       project_directory = path.resolve(
-        o
+        c
           .Question({
             prompt: "Which directory would you like to use instead? ",
             prompt_type: QuestionTypes.Input_String,
@@ -114,15 +114,15 @@ exports.handler = function (argv) {
   // Check if the project directory that was passed actually exists
   if (!fs.existsSync(project_directory)) {
     // If it doesnt... create it!!
-    o.Line("Project directory does not exist yet--Making directory!");
+    c.Line("Project directory does not exist yet--Making directory!");
     try {
       fs.mkdirSync(project_directory);
-      o.Line("New project directory made!");
+      c.Line("New project directory made!");
     } catch (err) {
-      o.Error(
+      c.Error(
         "There was an error with the project folder creation, and this tool cannot continue running."
       );
-      o.Error(err);
+      c.Error(err);
       return 1;
     }
 
@@ -133,12 +133,12 @@ exports.handler = function (argv) {
         project_directory + "/.head_start/",
         { overwrite: true }
       );
-      o.Line("Head-start setup files copied!");
+      c.Line("Head-start setup files copied!");
     } catch (err) {
-      o.Error(
+      c.Error(
         "There was an error with the necessary file creation, and this tool cannot continue running."
       );
-      o.Error(err);
+      c.Error(err);
       return 2;
     }
   }
@@ -147,7 +147,7 @@ exports.handler = function (argv) {
 
   fse.copySync(path.resolve(dot_directory + "/base/"), project_directory, {});
 
-  o.Paragraph(["Setting up NPM", "... this may take a second"]);
+  c.Paragraph(["Setting up NPM", "... this may take a second"]);
   execSync(
     "sh " +
       path.resolve(__dirname) +
@@ -158,27 +158,27 @@ exports.handler = function (argv) {
     (err, stdout, stderr) => {
       if (err) {
         //some err occurred
-        o.Error(err);
-        o.Line(
+        c.Error(err);
+        c.Line(
           "Unknown framework. Leave the line blank of type  none  if you aren't using one."
         );
         return framework_prompt();
       } else {
         // the *entire* stdout and stderr (buffered)
-        o.Line(`${stdout}`);
-        o.Empty();
-        o.Line("NPM Setup");
+        c.Line(`${stdout}`);
+        c.Empty();
+        c.Line("NPM Setup");
       }
     }
   );
 
-  o.Paragraph([
+  c.Paragraph([
     "I have a couple of questions for you before our full setup.",
     "This will help me install the right packages, and setup the necessary file structures and build tools.",
   ]);
 
   let express_app_prompt = () => {
-    return o.Question({
+    return c.Question({
       prompt: "Is your project an Electron.js app? (y/N) ",
       prompt_type: QuestionTypes.Select_Boolean,
       default_value: false,
@@ -190,7 +190,7 @@ exports.handler = function (argv) {
   project_express_app = express_app_prompt().getValue();
 
   let typescript_prompt = () => {
-    return o.Question({
+    return c.Question({
       prompt: "Is your project using TypeScript? (y/N) ",
       prompt_type: QuestionTypes.Select_Boolean,
       default_value: false,
@@ -200,8 +200,8 @@ exports.handler = function (argv) {
   let project_typescript = typescript_prompt().getValue();
 
   let framework_prompt = () => {
-    o.Line("Will you be using any of the following JavaScript frameworks?");
-    o.List([
+    c.Line("Will you be using any of the following JavaScript frameworks?");
+    c.List([
       "Angular",
       "Backbone.js",
       "Ember.js",
@@ -220,7 +220,7 @@ exports.handler = function (argv) {
       "Vite.js",
       "Vue.js",
     ]);
-    let framework = o
+    let framework = c
       .Question({
         prompt: "(please specify which one) ",
         prompt_type: QuestionTypes.Input_String,
@@ -229,8 +229,8 @@ exports.handler = function (argv) {
       .getValue()
       .toString();
     if (framework.length > 0 && framework !== "none") {
-      o.Line("Adding Framework: " + framework);
-      o.Line(path.resolve(__dirname));
+      c.Line("Adding Framework: " + framework);
+      c.Line(path.resolve(__dirname));
       exec(
         "sh " +
           path.resolve(__dirname) +
@@ -245,15 +245,15 @@ exports.handler = function (argv) {
         (err, stdout, stderr) => {
           if (err) {
             //some err occurred
-            o.Error(err);
-            o.Line(
+            c.Error(err);
+            c.Line(
               "Unknown framework. Leave the line blank of type  none  if you aren't using one."
             );
             return framework_prompt();
           }
           // the *entire* stdout and stderr (buffered)
-          o.Line(stdout);
-          o.Line("Added Framework: " + framework);
+          c.Line(stdout);
+          c.Line("Added Framework: " + framework);
         }
       );
     }
@@ -293,22 +293,22 @@ function ask_questions(argv) {
     },
   };
 
-  o.Divider();
-  o.Empty();
+  c.Divider();
+  c.Empty();
 
   if (argv["welcome"] === true) {
     // New User!!
 
-    o.Paragraph([
+    c.Paragraph([
       "Hello! :D",
       "Welcome to Head-start, a CLI tool that is aimed at making you (the developer), the fastest",
       " you can be during the initial setup of your project. Don't worry though, this tool can",
       " also be used mid-development, if you/your team realize you've missed a dependency.",
     ]);
-    o.Line(
+    c.Line(
       "During this walk through, we are going to guide you through the process of setting up:"
     );
-    o.List([
+    c.List([
       "Project Folder Structures",
       "Language/Framework Dependencies like Typescript, React, Express, etc.",
       "Build tools, Project Compilers, File Watchers, Linters, Prettier, etc.",
@@ -319,7 +319,7 @@ function ask_questions(argv) {
   } else {
     // Returning user!!
 
-    o.Line("Hey! Welcome back :)");
+    c.Line("Hey! Welcome back :)");
   }
 
   return response_tree;

@@ -1,6 +1,6 @@
 #!usr/bin/env node
 
-const o = require("./util/cmd_utils.js");
+const c = require("./util/cmd_utils.js");
 const spc = require("../resources/.head_start/base/snowpack.config");
 const fs = require("fs");
 const util = require("util");
@@ -59,8 +59,8 @@ function rewrite_snowpack_config(
     fs.writeFileSync(_write_path, output, "utf-8");
     return 0;
   } catch (err) {
-    o.Error("An error occurred when updating the snowpack.config.js");
-    o.Error(err);
+    c.Error("An error occurred when updating the snowpack.config.js");
+    c.Error(err);
     return 1;
   }
 }
