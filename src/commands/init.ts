@@ -6,11 +6,7 @@ const fs = require("fs");
 const fse = require("fs-extra");
 const { exec, execSync } = require("child_process");
 
-exports.command = [
-  "init [dir|d] [options]",
-  "initialize [dir|d] [options]",
-  "i [dir|d] [options]",
-];
+exports.command = ["init [dir|d] [options]", "initialize [dir|d] [options]", "i [dir|d] [options]"];
 
 exports.describe = "Initialize a repository";
 
@@ -18,8 +14,7 @@ exports.builder = {
   d: {
     alias: ["dir", "directory"],
     default: ".",
-    describe:
-      "The directory that the CLI will initialize your project in. Point this at your projects root.",
+    describe: "The directory that the CLI will initialize your project in. Point this at your projects root.",
   },
   debug: {
     type: "boolean",
@@ -43,73 +38,113 @@ exports.handler = function (argv) {
    *
    */
 
-  let project = ask_questions(argv).project;
+  ask_questions(argv).then((value) => {
+    /*
+     *
+     *  Then Build A Project Based Upon The Responses
+     *
+     */
+    //build_project(argv, value.project);
+  });
+};
 
+async function ask_questions(argv) {
   /*
    *
-   *  Then Build A Project Based Upon The Responses
+   *  Let's get all of our questions out of the way beforehand, so we only have to install the tools that we actually
+   *    need.
    *
    */
 
+  let response_tree = {
+    project: {
+      name: "",
+      directory: "",
+      type: "", // static site | dynamic site | library/api
+      frameworks: {
+        /*
+                                "framework": {
+                                  version: ""
+                                  options: { }
+                                }
+                                */
+      },
+      config_options: {
+        use_snowpack: true,
+        use_typescript: false,
+      },
+      dependencies: {
+        /* */
+      },
+    },
+  };
+
+  c.Divider();
+  c.Empty();
+
+  if (argv["welcome"] === true) {
+    // New User!!
+
+    c.Paragraph([
+      "Hello! :D",
+      "Welcome to Head-start, a CLI tool that is aimed at making you (the developer), the fastest",
+      " you can be during the initial setup of your project. Don't worry though, this tool can",
+      " also be used mid-development, if you/your team realize you've missed a dependency.",
+    ]);
+    c.Line("During this walk through, we are going to guide you through the process of setting up:");
+    c.List([
+      "Project Folder Structures",
+      "Language/Framework Dependencies like Typescript, React, Express, etc.",
+      "Build tools, Project Compilers, File Watchers, Linters, Prettier, etc.",
+      "NPM scripts",
+      "GitHub Actions/Workflows + Build Artifact Deployment (GitHub Pages)",
+      "And any addition dependencies you may need",
+    ]);
+  } else {
+    // Returning user!!
+
+    c.Line("Hey! Welcome back :)");
+  }
+
   let project_directory = "";
   let dot_directory = "";
-  if (argv["d"] === ".") {
-    c.Line(
-      "You've specified your current working directory as your project root. Is this correct?"
-    );
-    c.Empty();
-    c.Line(process.cwd().toString());
-    if (
-      c
-        .Question({
-          prompt: "^ (Y/n) ",
-          prompt_type: QuestionTypes.Select_Boolean,
-          default_value: true,
-        })
-        .getValue() === false
-    ) {
-      // No
-      project_directory = path.resolve(
-        c
-          .Question({
-            prompt: "Which directory would you like to use instead? ",
-            prompt_type: QuestionTypes.Input_String,
-          })
-          .getValue()
-      );
-    } else {
-      // Yes
-      project_directory = path.resolve(process.cwd());
-    }
-  } else {
-    c.Line(
-      "Below is the directory you've specified for your project root. Is this correct?"
-    );
-    c.Empty();
-    c.Line(path.resolve(argv["d"]));
-    if (
-      c
-        .Question({
-          prompt: "^ (Y/n) ",
-          prompt_type: QuestionTypes.Select_Boolean,
-          default_value: true,
-        })
-        .getValue() === false
-    ) {
-      // No
-      project_directory = path.resolve(
-        c
-          .Question({
-            prompt: "Which directory would you like to use instead? ",
-            prompt_type: QuestionTypes.Input_String,
-          })
-          .getValue()
-      );
-    } else {
-      // Yes
-      project_directory = path.resolve(argv["d"]);
-    }
+
+  async function choose_directory() {
+    return await c.Question({
+      prompt: "Which directory would you like to use? ",
+      prompt_type: QuestionTypes.Input_String,
+    });
   }
+
+  c.Line("Below is the directory you've specified for your project root. Is this correct?");
+  c.Empty();
+  c.Line(path.resolve(argv["d"]).toString());
+
+  await c
+    .Question({
+      prompt: "^ (Y/n) ",
+      prompt_type: QuestionTypes.Select_Boolean,
+      default_value: true,
+    })
+    .then((answer) => {
+      if (answer.getValue() === false) {
+        // No
+        return choose_directory().then((value) => {
+          project_directory = path.resolve(value);
+        });
+      } else {
+        // Yes
+        project_directory = path.resolve(argv["d"]);
+      }
+    });
+
+  return response_tree;
+}
+
+/*
+function build_project(argv, project) {
+  let project_directory = project.directory;
+  let dot_directory = project.directory + "/.head_start";
 
   // Check if the project directory that was passed actually exists
   if (!fs.existsSync(project_directory)) {
@@ -119,25 +154,17 @@ exports.handler = function (argv) {
       fs.mkdirSync(project_directory);
       c.Line("New project directory made!");
     } catch (err) {
-      c.Error(
-        "There was an error with the project folder creation, and this tool cannot continue running."
-      );
+      c.Error("There was an error with the project folder creation, and this tool cannot continue running.");
       c.Error(err);
       return 1;
     }
 
     // Then copy our `.head_start/` folder into it
     try {
-      fse.copySync(
-        path.resolve(__dirname + "/../"),
-        project_directory + "/.head_start/",
-        { overwrite: true }
-      );
+      fse.copySync(path.resolve(__dirname + "/../"), project_directory + "/.head_start/", { overwrite: true });
       c.Line("Head-start setup files copied!");
     } catch (err) {
-      c.Error(
-        "There was an error with the necessary file creation, and this tool cannot continue running."
-      );
+      c.Error("There was an error with the necessary file creation, and this tool cannot continue running.");
       c.Error(err);
       return 2;
     }
@@ -149,19 +176,12 @@ exports.handler = function (argv) {
 
   c.Paragraph(["Setting up NPM", "... this may take a second"]);
   execSync(
-    "sh " +
-      path.resolve(__dirname) +
-      "/setup_npm.sh " +
-      project_directory +
-      " " +
-      dot_directory,
+    "sh " + path.resolve(__dirname) + "/setup_npm.sh " + project_directory + " " + dot_directory,
     (err, stdout, stderr) => {
       if (err) {
         //some err occurred
         c.Error(err);
-        c.Line(
-          "Unknown framework. Leave the line blank of type  none  if you aren't using one."
-        );
+        c.Line("Unknown framework. Leave the line blank of type  none  if you aren't using one.");
         return framework_prompt();
       } else {
         // the *entire* stdout and stderr (buffered)
@@ -236,19 +256,17 @@ exports.handler = function (argv) {
           path.resolve(__dirname) +
           "/add_framework.sh " +
           project_directory +
-          " " /* Argument #1 */ +
+          " " +
           dot_directory +
-          " " /* Argument #2 */ +
+          " " +
           framework +
-          " " /* Argument #3 */ +
-          project_typescript /* Argument #4 */,
+          " " +
+          project_typescript,
         (err, stdout, stderr) => {
           if (err) {
             //some err occurred
             c.Error(err);
-            c.Line(
-              "Unknown framework. Leave the line blank of type  none  if you aren't using one."
-            );
+            c.Line("Unknown framework. Leave the line blank of type  none  if you aren't using one.");
             return framework_prompt();
           }
           // the *entire* stdout and stderr (buffered)
@@ -260,67 +278,4 @@ exports.handler = function (argv) {
   };
 
   framework_prompt();
-};
-
-function ask_questions(argv) {
-  /*
-   *
-   *  Let's get all of our questions out of the way beforehand, so we only have to install the tools that we actually
-   *    need.
-   *
-   */
-
-  let response_tree = {
-    project: {
-      name: "",
-      directory: "",
-      type: "", // static site | dynamic site | library/api
-      frameworks: {
-        /*
-        "framework": {
-          version: ""
-          options: { }
-        }
-        */
-      },
-      config_options: {
-        use_snowpack: true,
-        use_typescript: false,
-      },
-      dependencies: {
-        /* */
-      },
-    },
-  };
-
-  c.Divider();
-  c.Empty();
-
-  if (argv["welcome"] === true) {
-    // New User!!
-
-    c.Paragraph([
-      "Hello! :D",
-      "Welcome to Head-start, a CLI tool that is aimed at making you (the developer), the fastest",
-      " you can be during the initial setup of your project. Don't worry though, this tool can",
-      " also be used mid-development, if you/your team realize you've missed a dependency.",
-    ]);
-    c.Line(
-      "During this walk through, we are going to guide you through the process of setting up:"
-    );
-    c.List([
-      "Project Folder Structures",
-      "Language/Framework Dependencies like Typescript, React, Express, etc.",
-      "Build tools, Project Compilers, File Watchers, Linters, Prettier, etc.",
-      "NPM scripts",
-      "GitHub Actions/Workflows + Build Artifact Deployment (GitHub Pages)",
-      "And any addition dependencies you may need",
-    ]);
-  } else {
-    // Returning user!!
-
-    c.Line("Hey! Welcome back :)");
-  }
-
-  return response_tree;
-}
+}*/

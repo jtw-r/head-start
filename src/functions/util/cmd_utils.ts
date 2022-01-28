@@ -57,9 +57,19 @@ class Answer {
     value: string | number | boolean;
   }[];
 
+  constructor(_type, _responses = []) {
+    this.type = _type;
+    this.responses = [];
+  }
+
   getValue() {
+    if (this.responses === undefined) {
+      Error("Error getting answer value!");
+      console.log(this);
+    }
+
     if (this.responses.length >= 1) {
-      return this.responses[0];
+      return this.responses[0].value;
     } else {
       return {};
     }
@@ -76,33 +86,27 @@ class Answer {
   }
 }
 
-export function Question(opts: QuestionOptions): Answer {
-  const prompt = require("prompt-sync")({ sigint: true });
+export async function Question(opts: QuestionOptions): Promise<Answer> {
+  const prompts = require("prompts");
   const t = require("./txt_utils");
-  let a = new Answer();
+
+  let a = new Answer(opts.prompt_type);
   switch (opts.prompt_type) {
     case QuestionTypes.Select_Boolean:
-      let response = prompt(opts.prompt, opts.default_value).toLowerCase();
-      if (response === ":q" || response === ":quit") {
-        a.addResponse("");
-      } else if (response === "") {
-        if (t.parse_string_to_boolean(opts.default_value) !== null) {
-          a.addResponse(t.parse_string_to_boolean(opts.default_value));
-        } else {
-          a.addResponse("");
-        }
-      } else if (t.parse_string_to_boolean(response) === null) {
-        Line("Unknown input passed. Please try again");
-        a.addResponse(
-          Question({
-            prompt: "",
-            prompt_type: opts.prompt_type,
-            default_value: opts.default_value,
-          }).getValue()
-        );
-      } else {
-        a.addResponse(t.parse_string_to_boolean(response));
-      }
+      await prompts({
+        type: "confirm",
+        name: "value",
+        message: opts.prompt,
+        initial: t.parse_string_to_boolean(opts.default_value),
+      })
+        .then((_resp) => {
+          a.addResponse(_resp.value);
+          console.log(_resp.value);
+          return a;
+        })
+        .catch((reason) => {
+          Error(reason);
+        });
       break;
     case QuestionTypes.Select_Single:
       break;
@@ -110,18 +114,19 @@ export function Question(opts: QuestionOptions): Answer {
       break;
     case QuestionTypes.Input_String:
     case QuestionTypes.Input_Number:
-      if (opts.allow_multiline) {
-        let response = prompt(opts.prompt, opts.default_value);
-        a.addResponse(response);
-
-        while (response !== ":q") {
-          response = prompt("(cont.)>", opts.default_value);
-          a.addResponse(response);
-        }
-      } else {
-        let response = prompt(opts.prompt, opts.default_value);
-        a.addResponse(response);
-      }
+      await prompts({
+        type: "confirm",
+        name: "value",
+        message: opts.prompt,
+        initial: opts.default_value,
+      })
+        .then((_resp) => {
+          a.addResponse(_resp.value);
+          return a;
+        })
+        .catch((reason) => {
+          Error(reason);
+        });
   }
   return a;
 }
@@ -139,9 +144,7 @@ export function Run(_command, _directory = process.cwd()) {
   const child_process = require("child_process");
   child_process.exec(_command, { cwd: _directory }, (error, stdout, stderr) => {
     if (error) {
-      Error(
-        `Error occurred while executing command: \`${_command}\` in directory: ${_directory}`
-      );
+      Error(`Error occurred while executing command: \`${_command}\` in directory: ${_directory}`);
     } else if (stdout) {
       Line(stdout);
     }
@@ -182,11 +185,7 @@ enum BG_COLOURS {
 
 export function Colour(
   _text,
-  _styles:
-    | [FG_COLOURS | BG_COLOURS | STDOUT_MODIFIERS]
-    | FG_COLOURS
-    | BG_COLOURS
-    | STDOUT_MODIFIERS
+  _styles: [FG_COLOURS | BG_COLOURS | STDOUT_MODIFIERS] | FG_COLOURS | BG_COLOURS | STDOUT_MODIFIERS
 ) {
   return _styles + _text + STDOUT_MODIFIERS.Reset;
 }

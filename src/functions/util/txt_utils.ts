@@ -1,6 +1,6 @@
 export function parse_string_to_boolean(_input: string): boolean {
   let output: boolean;
-  switch (_input.toLowerCase()) {
+  switch (_input) {
     case "y":
     case "yes":
     case "yep":

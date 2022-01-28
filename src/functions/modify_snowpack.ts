@@ -33,11 +33,7 @@ require("yargs/yargs")(process.argv.slice(2))
   .help()
   .wrap(90).argv;
 
-function rewrite_snowpack_config(
-  _modified_config_obj,
-  _write_path,
-  _options = "utf-8"
-) {
+function rewrite_snowpack_config(_modified_config_obj, _write_path, _options = "utf-8") {
   let temp_config_obj = {
     mount: _modified_config_obj.mount,
     plugins: _modified_config_obj.plugins,

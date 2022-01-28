@@ -4,7 +4,8 @@
   "description": "A project setup tool for Node.js",
   "main": "dist/cli.js",
   "scripts": {
-    "test": "node dist/cli.js init temp/",
+    "dev": "npm-run-all build test",
+    "test": "node --trace-warnings dist/cli.js init --welcome",
     "prebuild": "npm-run-all prebuild-*",
     "prebuild-format": "npm run prettier-src",
     "build": "npm-run-all build-*",

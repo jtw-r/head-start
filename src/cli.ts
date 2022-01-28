@@ -19,9 +19,7 @@ require("yargs/yargs")(process.argv.slice(2))
     (argv) => {
       c.Empty();
       c.Divider();
-      c.Error(
-        "Unknown command passed. Please run this script with --help appended if you are new."
-      );
+      c.Error("Unknown command passed. Please run this script with --help appended if you are new.");
       c.Divider();
     }
   )
