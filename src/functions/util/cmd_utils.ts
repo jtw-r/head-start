@@ -43,7 +43,7 @@ export function Abort(_input = "Aborting", _code = 0): never {
 export enum QuestionTypes {
   Input_String,
   Input_Number,
-  Select_Boolean,
+  Input_Boolean,
   Select_Single,
   Select_Multiple,
 }
@@ -91,64 +91,60 @@ export async function Question(opts: QuestionOptions): Promise<Answer> {
   const prompts = require("prompts");
   const t = require("./txt_utils");
 
-  switch (opts.prompt_type) {
-    case QuestionTypes.Select_Boolean:
-      return await prompts({
-        type: "confirm",
-        name: "value",
-        message: opts.prompt,
-        initial: t.parse_string_to_boolean(opts.default_value),
-      }).then(
-        (_resp) => {
-          if (typeof _resp.value === "undefined") {
-            Abort("Empty value passed. Aborting!");
-          } else {
-            return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
-          }
-        },
-        (reason) => {
-          Error(reason);
+  async function handle_single_val_question(q: typeof prompts) {
+    return await q.then(
+      (_resp) => {
+        if (typeof _resp.value === "undefined") {
+          Abort("Empty value passed. Aborting!");
+        } else {
+          return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
         }
+      },
+      (reason) => {
+        Error(reason);
+      }
+    );
+  }
+
+  switch (opts.prompt_type) {
+    case QuestionTypes.Input_Boolean:
+      return await handle_single_val_question(
+        prompts({
+          type: "confirm",
+          name: "value",
+          message: opts.prompt,
+          initial: t.parse_string_to_boolean(opts.default_value),
+        })
       );
     case QuestionTypes.Select_Single:
-      break;
+      return await handle_single_val_question(
+        prompts({
+          type: "select",
+          name: "value",
+          message: opts.prompt,
+          choices: opts?.prompt_options,
+          initial: opts?.default_value,
+        })
+      );
     case QuestionTypes.Select_Multiple:
       break;
     case QuestionTypes.Input_String:
-      return await prompts({
-        type: "text",
-        name: "value",
-        message: opts.prompt,
-        initial: opts?.default_value,
-      }).then(
-        (_resp) => {
-          if (typeof _resp.value === "undefined") {
-            Abort("Empty value passed. Aborting!");
-          } else {
-            return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
-          }
-        },
-        (reason) => {
-          Error(reason);
-        }
+      return await handle_single_val_question(
+        prompts({
+          type: "text",
+          name: "value",
+          message: opts.prompt,
+          initial: opts?.default_value,
+        })
       );
     case QuestionTypes.Input_Number:
-      return await prompts({
-        type: "number",
-        name: "value",
-        message: opts.prompt,
-        initial: opts.default_value,
-      }).then(
-        (_resp) => {
-          if (typeof _resp.value === "undefined") {
-            Abort("'undefined' value passed. Aborting!");
-          } else {
-            return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
-          }
-        },
-        (reason) => {
-          Error(reason);
-        }
+      return await handle_single_val_question(
+        prompts({
+          type: "number",
+          name: "value",
+          message: opts.prompt,
+          initial: opts.default_value,
+        })
       );
   }
 }
