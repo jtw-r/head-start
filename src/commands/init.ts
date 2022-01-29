@@ -119,6 +119,8 @@ async function ask_questions(argv) {
   let dot_directory = "";
 
   async function choose_directory() {
+    // Still getting used to promises!!!
+    // Sorry if this isn't pretty
     return await c
       .Question({
         prompt: "Choose directory (default is cwd)",
