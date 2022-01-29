@@ -1,5 +1,7 @@
 #!usr/bin/env node
 
+import * as c from "./util/cmd_utils";
+
 const spc = require("../../resources/.head_start/base/snowpack.config");
 const fs = require("fs");
 const util = require("util");
@@ -55,7 +57,6 @@ function rewrite_snowpack_config(_modified_config_obj, _write_path, _options = "
     return 0;
   } catch (err) {
     c.Error("An error occurred when updating the snowpack.config.js");
-    c.Error(err);
-    return 1;
+    c.Abort(err, 1);
   }
 }

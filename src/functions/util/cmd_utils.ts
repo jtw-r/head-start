@@ -1,4 +1,4 @@
-const util = require("util");
+import * as util from "util";
 
 export function Paragraph(_input: string[], _spacing = true) {
   _input.forEach((value) => stdout(value));
@@ -30,9 +30,14 @@ export function Empty(): void {
   stdout();
 }
 
-export function Error(_input): void {
+export function Error(_input): never {
   stdout(_input, { foreground_colour: FG_COLOURS.FgRed });
   process.exit(1);
+}
+
+export function Abort(_input = "Aborting", _code = 0): never {
+  Line(_input);
+  process.exit(_code);
 }
 
 export enum QuestionTypes {
@@ -63,14 +68,11 @@ class Answer {
     this.responses = _responses;
   }
 
-  getValue() {
-    if (this.responses === undefined) {
-      Error("Error getting answer value!");
-      throw this;
-    } else if (this.responses.length >= 1) {
+  getValue(): string | number | boolean {
+    if (this.responses?.length >= 1) {
       return this.responses[0].value;
     } else {
-      return {};
+      Error("Trying to get the value of an undefined response");
     }
   }
 
@@ -96,13 +98,18 @@ export async function Question(opts: QuestionOptions): Promise<Answer> {
         name: "value",
         message: opts.prompt,
         initial: t.parse_string_to_boolean(opts.default_value),
-      })
-        .then((_resp) => {
-          return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
-        })
-        .catch((reason) => {
+      }).then(
+        (_resp) => {
+          if (typeof _resp.value === "undefined") {
+            Abort("Empty value passed. Aborting!");
+          } else {
+            return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
+          }
+        },
+        (reason) => {
           Error(reason);
-        });
+        }
+      );
     case QuestionTypes.Select_Single:
       break;
     case QuestionTypes.Select_Multiple:
@@ -113,26 +120,36 @@ export async function Question(opts: QuestionOptions): Promise<Answer> {
         name: "value",
         message: opts.prompt,
         initial: opts?.default_value,
-      })
-        .then((_resp) => {
-          return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
-        })
-        .catch((reason) => {
+      }).then(
+        (_resp) => {
+          if (typeof _resp.value === "undefined") {
+            Abort("Empty value passed. Aborting!");
+          } else {
+            return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
+          }
+        },
+        (reason) => {
           Error(reason);
-        });
+        }
+      );
     case QuestionTypes.Input_Number:
       return await prompts({
         type: "number",
         name: "value",
         message: opts.prompt,
         initial: opts.default_value,
-      })
-        .then((_resp) => {
-          return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
-        })
-        .catch((reason) => {
+      }).then(
+        (_resp) => {
+          if (typeof _resp.value === "undefined") {
+            Abort("'undefined' value passed. Aborting!");
+          } else {
+            return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
+          }
+        },
+        (reason) => {
           Error(reason);
-        });
+        }
+      );
   }
 }
 
@@ -145,15 +162,19 @@ export function Object(_object: {}, _name?: string): void {
   stdout(_o);
 }
 
-export function Run(_command, _directory = process.cwd()) {
+export function Run(_command, _callback?, _directory = process.cwd()) {
   const child_process = require("child_process");
-  child_process.exec(_command, { cwd: _directory }, (error, stdout, stderr) => {
-    if (error) {
-      Error(`Error occurred while executing command: \`${_command}\` in directory: ${_directory}`);
-    } else if (stdout) {
-      Line(stdout);
-    }
-  });
+  if (_callback === undefined) {
+    child_process.exec(_command, { cwd: _directory }, (error, stdout, stderr) => {
+      if (error) {
+        Error(`Error occurred while executing command: \`${_command}\` in directory: ${_directory}`);
+      } else if (stdout) {
+        Line(stdout);
+      }
+    });
+  } else {
+    child_process.exec(_command, { cwd: _directory }, _callback);
+  }
 }
 
 export enum STDOUT_MODIFIERS {
