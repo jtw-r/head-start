@@ -38,14 +38,18 @@ exports.handler = function (argv) {
    *
    */
 
-  ask_questions(argv).then((value) => {
-    /*
-     *
-     *  Then Build A Project Based Upon The Responses
-     *
-     */
-    //build_project(argv, value.project);
-  });
+  ask_questions(argv)
+    .then((value) => {
+      /*
+       *
+       *  Then Build A Project Based Upon The Responses
+       *
+       */
+      //build_project(argv, value.project);
+    })
+    .catch((err) => {
+      c.Error(err);
+    });
 };
 
 async function ask_questions(argv) {
@@ -124,9 +128,13 @@ async function ask_questions(argv) {
       .then((value) => {
         project_directory = path.resolve(value.getValue());
       })
-      .catch((err) => {
-        c.Error("Error occurred while sorting out project directory");
-        throw err;
+      .catch(function (err) {
+        c.Line("Error occurred while sorting out project directory");
+        if (err.code === "ERR_INVALID_ARG_TYPE") {
+          c.Error("Empty passed to path. Aborting!");
+        } else {
+          throw err;
+        }
       });
   }
 
@@ -134,7 +142,14 @@ async function ask_questions(argv) {
     // This means that the project flag "-d" has NOT been set, so we need to ask the user which directory they would
     // like to set their project root in.
     c.Line("Which no project directory has been set yet. Where would you like to begin?");
-    await choose_directory();
+    await choose_directory().catch((err) => {
+      c.Line("Error occurred while sorting out project directory");
+      if (err.code === "ERR_INVALID_ARG_TYPE") {
+        c.Error("Empty passed to path. Aborting!");
+      } else {
+        throw err;
+      }
+    });
   } else {
     c.Line("Below is the directory you've specified for your project root. Is this correct?");
     c.Empty();

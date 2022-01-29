@@ -32,6 +32,7 @@ export function Empty(): void {
 
 export function Error(_input): void {
   stdout(_input, { foreground_colour: FG_COLOURS.FgRed });
+  process.exit(1);
 }
 
 export enum QuestionTypes {
