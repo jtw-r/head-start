@@ -1,25 +1,37 @@
-import * as c from "./util/cmd_utils";
-import { Colour, FG_COLOURS, QuestionTypes } from "./util/cmd_utils";
 import * as path from "path";
-
-interface Dependency {
-  name: string;
-  version: string;
-  type: "framework" | "other";
-  options: { [key: string]: string | number | boolean };
-}
+import * as c from "../functions/util/cmd_utils";
+import { Colour, FG_COLOURS, QuestionTypes } from "../functions/util/cmd_utils";
+import { Dependency } from "../interfaces/Dependency";
+import * as util from "util";
 
 export class Project_Structure {
   name: string;
-  root_directory: string;
-  dot_directory: string;
-  type: string;
-  config_options: { [key: string]: string | number | boolean } = {};
-  dependencies: Dependency[] = [];
+  protected root_directory: string;
+  protected dot_directory: string;
+  protected type: "string" | "";
+  protected config_options = {
+    uses_typescript: false,
+    uses_electron: false,
+    uses_react: false,
+  };
+  protected dependencies: Dependency[] = [];
 
   public update_directories(_new_path: string): void {
     this.root_directory = path.resolve(_new_path);
     this.dot_directory = this.root_directory + "/.head_start";
+  }
+
+  public config_set(_option: string, _value: any) {
+    this.config_options[_option] = _value;
+  }
+
+  public config_get(_option: string) {
+    return this.config_options[_option];
+  }
+
+  public add_dependency(_dependency: Dependency) {
+    // We can do validation here too, if needed!
+    this.dependencies.push(_dependency);
   }
 
   public async guided_setup(argv) {
@@ -29,6 +41,8 @@ export class Project_Structure {
      *    need.
      *
      */
+
+    console.log(util.inspect(this));
 
     c.Divider();
     c.Empty();

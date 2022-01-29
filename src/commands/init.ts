@@ -1,5 +1,5 @@
 import * as c from "../functions/util/cmd_utils";
-import { Project_Structure } from "../functions/ask_questions";
+import { Project_Structure } from "../classes/Project_Structure";
 
 exports.command = ["init [dir|d] [options]", "initialize [dir|d] [options]", "i [dir|d] [options]"];
 

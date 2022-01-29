@@ -1,4 +1,6 @@
 import * as util from "util";
+import { Answer } from "../../classes/Answer";
+import { QuestionOptions } from "../../interfaces/QuestionOptions";
 
 export function Paragraph(_input: string[], _spacing = true) {
   _input.forEach((value) => stdout(value));
@@ -46,45 +48,6 @@ export enum QuestionTypes {
   Input_Boolean,
   Select_Single,
   Select_Multiple,
-}
-
-interface QuestionOptions {
-  prompt: string;
-  prompt_type: QuestionTypes;
-  prompt_options?: {};
-  default_value?: any;
-  allow_multiline?: boolean;
-}
-
-class Answer {
-  type: QuestionTypes;
-  responses: {
-    index: number;
-    value: string | number | boolean;
-  }[];
-
-  constructor(_type, _responses = []) {
-    this.type = _type;
-    this.responses = _responses;
-  }
-
-  getValue(): string | number | boolean {
-    if (this.responses?.length >= 1) {
-      return this.responses[0].value;
-    } else {
-      Error("Trying to get the value of an undefined response");
-    }
-  }
-
-  getValues() {
-    let _v = [];
-    this.responses.forEach((value, index) => _v.push(value));
-    return _v;
-  }
-
-  addResponse(_value, _section_id = 0) {
-    this.responses.push({ index: _section_id, value: _value });
-  }
 }
 
 export async function Question(opts: QuestionOptions): Promise<Answer> {
