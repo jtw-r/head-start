@@ -1,10 +1,10 @@
 #!usr/bin/env node
 
-import * as c from "./util/cmd_utils";
+import * as c from "../util/cmd_utils";
 
 const spc = require("../../resources/.head_start/base/snowpack.config");
 const fs = require("fs");
-const util = require("util");
+const util = require("../util");
 const yargs = require("yargs");
 require("yargs/yargs")(process.argv.slice(2))
   .command(

@@ -6,7 +6,7 @@
  *
  */
 
-import * as c from "./functions/util/cmd_utils";
+import * as c from "./util/cmd_utils";
 
 // TODO: Load `yargs` from a CDN or smthn, or... find a way to package it in via the compiler.
 require("yargs/yargs")(process.argv.slice(2))

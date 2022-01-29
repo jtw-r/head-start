@@ -1,6 +1,6 @@
 import * as util from "util";
-import { Answer } from "../../classes/Answer";
-import { QuestionOptions } from "../../interfaces/QuestionOptions";
+import { Answer } from "../classes/Answer";
+import { QuestionOptions } from "../interfaces/QuestionOptions";
 
 export function Paragraph(_input: string[], _spacing = true) {
   _input.forEach((value) => stdout(value));

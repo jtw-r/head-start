@@ -1,20 +1,44 @@
 import * as path from "path";
-import * as c from "../functions/util/cmd_utils";
-import { Colour, FG_COLOURS, QuestionTypes } from "../functions/util/cmd_utils";
+import * as c from "../util/cmd_utils";
+import { Colour, FG_COLOURS, QuestionTypes } from "../util/cmd_utils";
 import { Dependency } from "../interfaces/Dependency";
-import * as util from "util";
+import { Project_Types } from "../enums/Project_Types";
+import { Dependency_Types } from "../enums/Dependency_Types";
 
 export class Project_Structure {
-  name: string;
+  public get Type(): Project_Types {
+    return this.type;
+  }
+  public get Name(): string {
+    return this.name;
+  }
+  public get Dot_directory(): string {
+    return this.dot_directory;
+  }
+  public get Root_directory(): string {
+    return this.root_directory;
+  }
+  protected name: string;
   protected root_directory: string;
   protected dot_directory: string;
-  protected type: "string" | "";
+
+  protected type: Project_Types;
   protected config_options = {
     uses_typescript: false,
-    uses_electron: false,
-    uses_react: false,
+    uses_prettier: true,
+    uses_eslint: true,
   };
+
   protected dependencies: Dependency[] = [];
+
+  public get_dependencies(_type?: Dependency_Types) {
+    if (_type) {
+    } else {
+      return this.dependencies;
+    }
+  }
+
+  public check_dependency(_dependency) {}
 
   public update_directories(_new_path: string): void {
     this.root_directory = path.resolve(_new_path);
@@ -41,8 +65,6 @@ export class Project_Structure {
      *    need.
      *
      */
-
-    console.log(util.inspect(this));
 
     c.Divider();
     c.Empty();
@@ -95,6 +117,9 @@ export class Project_Structure {
         .finally(() => {});
     }
 
+    c.Empty;
+    c.Line("Question 1:");
+
     if (argv["d"] === "" || argv["d"] === undefined) {
       // This means that the project flag "-d" has NOT been set, so we need to ask the user which directory they would
       // like to set their project root in.
@@ -115,10 +140,12 @@ export class Project_Structure {
           (answer) => {
             if (answer.getValue() === false) {
               // No
+              c.Empty;
+              c.Line("Question 1.1:");
               choose_directory();
             } else {
               // Yes
-              this.root_directory = path.resolve(argv["d"]);
+              this.update_directories(path.resolve(argv["d"]));
             }
           },
           (err) => {
@@ -130,23 +157,111 @@ export class Project_Structure {
     c.Line(Colour(`Project root has been set to: ${this.root_directory}`, FG_COLOURS.FgGreen));
 
     /*
-    Electron.js
+    Project Type: Static Website, Dynamic Website, Library, Desktop App, Mobile App, Other
      */
+    c.Empty;
+    c.Line("Question 2:");
     await c
       .Question({
-        prompt: "Is your project an Electron.js app? (y/N) ",
-        prompt_type: QuestionTypes.Input_Boolean,
-        default_value: false,
+        prompt: "What type of Node project will you be creating?",
+        prompt_type: QuestionTypes.Select_Single,
+        prompt_options: [
+          { title: "Static Website", value: Project_Types.Static_Website },
+          { title: "Dynamic Website", value: Project_Types.Dynamic_Website },
+          { title: "Library", value: Project_Types.Library },
+          { title: "Desktop App", value: Project_Types.Desktop_App },
+          { title: "Mobile App", value: Project_Types.Mobile_App, disabled: true },
+          { title: "Other", value: Project_Types.Other },
+        ],
+        default_value: 0,
       })
       .then((answer) => {
-        if (answer.getValue() === true) {
-          this.dependencies.push({ name: "electron", options: {}, type: "framework", version: "latest" });
-        }
+        this.type = <Project_Types>answer.getValue();
+        c.Line("Setting project type to: " + this.type);
       });
+
+    /*
+    Handle project types!
+    This is where you ask the user specific questions pertaining to which project type they are setting up
+     */
+
+    switch (this.type) {
+      case Project_Types.Static_Website:
+        /*
+        Static Website
+        */
+        break;
+      case Project_Types.Dynamic_Website:
+        /*
+        Dynamic Website
+        */
+        break;
+      case Project_Types.Library:
+        /*
+        Library
+        */
+        break;
+      case Project_Types.Desktop_App:
+        /*
+        Desktop App
+        */
+
+        /*
+        Electron.js
+        */
+        c.Empty;
+        c.Line("Question 2.1:");
+        await c
+          .Question({
+            prompt: "Is your project an Electron.js app? (y/N) ",
+            prompt_type: QuestionTypes.Input_Boolean,
+            default_value: false,
+          })
+          .then((answer) => {
+            if (answer.getValue() === true) {
+              this.dependencies.push({
+                name: "electron",
+                options: {},
+                type: Dependency_Types.Framework,
+                version: "latest",
+              });
+            }
+          });
+        break;
+      case Project_Types.Mobile_App:
+        /*
+        Mobile App
+        */
+        c.Empty;
+        c.Line("Question 2.1:");
+        await c
+          .Question({
+            prompt: "Which Mobile Development Framework will you be using?",
+            prompt_type: QuestionTypes.Select_Single,
+            prompt_options: [
+              { title: "React Native", value: "react-native" },
+              { title: "Flutter", value: "flutter" },
+            ],
+            default_value: 0,
+          })
+          .then((answer) => {
+            this.type = <Project_Types>answer.getValue();
+            c.Line("Setting project type to: " + this.type);
+          });
+        break;
+      default:
+      case Project_Types.Other:
+        /*
+        Other
+        */
+        break;
+    }
 
     /*
     Typescript
      */
+    c.Empty;
+    c.Line("Question 3:");
     await c.Question({
       prompt: "Is your project using TypeScript? (y/N) ",
       prompt_type: QuestionTypes.Input_Boolean,
@@ -154,7 +269,11 @@ export class Project_Structure {
     });
 
     /*
-    Javascript Frameworks
+    JavaScript Frameworks
+    TODO: Split this into three sections
+     1. All in one frameworks: Remix, Next.js
+     2. Front end "javascript libraries/frameworks": react,
+     3. Back end frameworks: Express
      */
     c.Line("Will you be using any of the following JavaScript frameworks?");
     await c
@@ -185,7 +304,9 @@ export class Project_Structure {
         let framework = answer.getValue().toString() ?? "none";
         if (framework.length > 0 && framework !== "none") {
           c.Line("Adding Framework: " + framework);
+          this.add_dependency({ name: framework, options: {}, type: Dependency_Types.Framework, version: "latest" });
         }
       });
+    c.Object(this, "project");
   }
 }

@@ -1,10 +1,10 @@
-import { Error, QuestionTypes } from "../functions/util/cmd_utils";
+import { Error, QuestionTypes } from "../util/cmd_utils";
 
 export class Answer {
   type: QuestionTypes;
   responses: {
     index: number;
-    value: string | number | boolean;
+    value: any;
   }[];
 
   constructor(_type, _responses = []) {
@@ -12,7 +12,7 @@ export class Answer {
     this.responses = _responses;
   }
 
-  getValue(): string | number | boolean {
+  getValue(): any {
     if (this.responses?.length >= 1) {
       return this.responses[0].value;
     } else {
@@ -20,7 +20,7 @@ export class Answer {
     }
   }
 
-  getValues() {
+  getValues(): any[] {
     let _v = [];
     this.responses.forEach((value, index) => _v.push(value));
     return _v;

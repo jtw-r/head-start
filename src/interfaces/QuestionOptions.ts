@@ -1,4 +1,4 @@
-import { QuestionTypes } from "../functions/util/cmd_utils";
+import { QuestionTypes } from "../util/cmd_utils";
 
 export interface QuestionOptions {
   prompt: string;
