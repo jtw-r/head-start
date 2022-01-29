@@ -155,7 +155,7 @@ export function Run(_command, _directory = process.cwd()) {
   });
 }
 
-enum STDOUT_MODIFIERS {
+export enum STDOUT_MODIFIERS {
   Reset = "\x1b[0m",
   Bright = "\x1b[1m",
   Dim = "\x1b[2m",
@@ -165,7 +165,7 @@ enum STDOUT_MODIFIERS {
   Hidden = "\x1b[8m",
 }
 
-enum FG_COLOURS {
+export enum FG_COLOURS {
   FgBlack = "\x1b[30m",
   FgRed = "\x1b[31m",
   FgGreen = "\x1b[32m",
@@ -176,7 +176,7 @@ enum FG_COLOURS {
   FgWhite = "\x1b[37m",
 }
 
-enum BG_COLOURS {
+export enum BG_COLOURS {
   BgBlack = "\x1b[40m",
   BgRed = "\x1b[41m",
   BgGreen = "\x1b[42m",
@@ -194,14 +194,12 @@ export function Colour(
   return _styles + _text + STDOUT_MODIFIERS.Reset;
 }
 
-Line(Colour("Hello World!", FG_COLOURS.FgGreen));
-
 enum STDOUT_TYPES {
   log,
   error,
 }
 
-interface STDOUT_STYLE {
+export interface STDOUT_STYLE {
   modifier?: STDOUT_MODIFIERS;
   foreground_colour?: FG_COLOURS;
   background_colour?: BG_COLOURS;
@@ -211,15 +209,7 @@ function stdout(
   _line: string | number | boolean = "",
   _style: STDOUT_STYLE = { modifier: STDOUT_MODIFIERS.Reset }
 ): void {
-  let style_glob = "";
-  if (_style.modifier !== undefined) {
-    style_glob += _style.modifier;
-  }
-  if (_style.foreground_colour !== undefined) {
-    style_glob += _style.foreground_colour;
-  }
-  if (_style.background_colour !== undefined) {
-    style_glob += _style.background_colour;
-  }
+  // This will optionally combine the _style children, as long as they are not undefined/null.
+  let style_glob = [_style.background_colour ?? "", _style.foreground_colour ?? "", _style.modifier ?? ""].join("");
   console.log(style_glob, _line);
 }

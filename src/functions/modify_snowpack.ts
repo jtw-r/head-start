@@ -1,6 +1,5 @@
 #!usr/bin/env node
 
-const c = require("./util/cmd_utils.js");
 const spc = require("../../resources/.head_start/base/snowpack.config");
 const fs = require("fs");
 const util = require("util");

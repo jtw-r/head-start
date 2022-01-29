@@ -1,3 +1,3 @@
-const c = require("./util/cmd_utils.js");
+#!usr/bin/env node
 
 exports.setup_npm = function () {};

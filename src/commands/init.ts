@@ -1,5 +1,5 @@
 import * as c from "../functions/util/cmd_utils.js";
-import { QuestionTypes } from "../functions/util/cmd_utils.js";
+import { Colour, FG_COLOURS, QuestionTypes } from "../functions/util/cmd_utils.js";
 
 const path = require("path");
 const fs = require("fs");
@@ -13,7 +13,7 @@ exports.describe = "Initialize a repository";
 exports.builder = {
   d: {
     alias: ["dir", "directory"],
-    default: ".",
+    default: "",
     describe: "The directory that the CLI will initialize your project in. Point this at your projects root.",
   },
   debug: {
@@ -85,8 +85,9 @@ async function ask_questions(argv) {
   if (argv["welcome"] === true) {
     // New User!!
 
+    c.Line("Hello :D");
+    c.Empty();
     c.Paragraph([
-      "Hello! :D",
       "Welcome to Head-start, a CLI tool that is aimed at making you (the developer), the fastest",
       " you can be during the initial setup of your project. Don't worry though, this tool can",
       " also be used mid-development, if you/your team realize you've missed a dependency.",
@@ -106,38 +107,62 @@ async function ask_questions(argv) {
     c.Line("Hey! Welcome back :)");
   }
 
+  c.Empty();
+  c.Line(Colour("Let's get started on your new project!", FG_COLOURS.FgGreen));
+  c.Empty();
+
   let project_directory = "";
   let dot_directory = "";
 
   async function choose_directory() {
-    return await c.Question({
-      prompt: "Which directory would you like to use? ",
-      prompt_type: QuestionTypes.Input_String,
-    });
+    return await c
+      .Question({
+        prompt: "Choose directory (default is cwd)",
+        default_value: "./",
+        prompt_type: QuestionTypes.Input_String,
+      })
+      .then((value) => {
+        project_directory = path.resolve(value.getValue());
+      })
+      .catch((err) => {
+        c.Error("Error occurred while sorting out project directory");
+        throw err;
+      });
   }
 
-  c.Line("Below is the directory you've specified for your project root. Is this correct?");
-  c.Empty();
-  c.Line(path.resolve(argv["d"]).toString());
+  if (argv["d"] === "" || argv["d"] === undefined) {
+    // This means that the project flag "-d" has NOT been set, so we need to ask the user which directory they would
+    // like to set their project root in.
+    c.Line("Which no project directory has been set yet. Where would you like to begin?");
+    await choose_directory();
+  } else {
+    c.Line("Below is the directory you've specified for your project root. Is this correct?");
+    c.Empty();
+    c.Line(path.resolve(argv["d"]).toString());
 
-  await c
-    .Question({
-      prompt: "",
-      prompt_type: QuestionTypes.Select_Boolean,
-      default_value: true,
-    })
-    .then((answer) => {
-      console.log(answer.getValue());
-      if (answer.getValue() === false) {
-        // No
-        return choose_directory().then((value) => {
-          project_directory = path.resolve(value.getValue());
-        });
-      } else {
-        // Yes
-        project_directory = path.resolve(argv["d"]);
-      }
-    });
+    await c
+      .Question({
+        prompt: "",
+        prompt_type: QuestionTypes.Select_Boolean,
+        default_value: true,
+      })
+      .then((answer) => {
+        console.log(answer.getValue());
+        if (answer.getValue() === false) {
+          // No
+          return choose_directory();
+        } else {
+          // Yes
+          project_directory = path.resolve(argv["d"]);
+        }
+      })
+      .catch((err) => {
+        c.Error("Error occurred while sorting out project directory");
+        throw err;
+      });
+  }
+
+  c.Line(Colour(`Project root has been set to: ${project_directory}`, FG_COLOURS.FgGreen));
 
   return response_tree;
 }
