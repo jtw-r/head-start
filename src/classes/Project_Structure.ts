@@ -8,30 +8,32 @@ import { FG_COLOURS } from "../util/enums/STDOUT";
 import { Question_Types } from "../util/enums/Question_Types";
 
 export class Project_Structure {
-  public get Type(): Project_Types {
-    return this.type;
-  }
-  public get Name(): string {
-    return this.name;
-  }
-  public get Dot_directory(): string {
-    return this.dot_directory;
-  }
-  public get Root_directory(): string {
-    return this.root_directory;
-  }
   protected name: string;
   protected root_directory: string;
   protected dot_directory: string;
-
   protected type: Project_Types;
   protected config_options = {
     uses_typescript: false,
     uses_prettier: true,
     uses_eslint: true,
   };
-
   protected dependencies: Dependency[] = [];
+
+  public get Type(): Project_Types {
+    return this.type;
+  }
+
+  public get Name(): string {
+    return this.name;
+  }
+
+  public get Dot_directory(): string {
+    return this.dot_directory;
+  }
+
+  public get Root_directory(): string {
+    return this.root_directory;
+  }
 
   public get_dependencies(_type?: Dependency_Types) {
     if (_type) {
