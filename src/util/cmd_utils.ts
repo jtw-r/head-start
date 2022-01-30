@@ -4,6 +4,8 @@ import { STDOUT_STYLE } from "./interfaces/STDOUT_STYLE";
 import { Question_Types } from "./enums/Question_Types";
 import { BG_COLOURS, FG_COLOURS, STDOUT_MODIFIERS } from "./enums/STDOUT";
 import { Question_Options } from "./interfaces/Question_Options";
+import { cb__handle_run_default } from "./callbacks";
+import * as child_process from "child_process";
 
 export function Paragraph(_input: string[], _spacing = true) {
   _input.forEach((value) => stdout(value));
@@ -55,7 +57,16 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         if (typeof _resp.value === "undefined") {
           Abort("Empty value passed. Aborting!");
         } else {
-          return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
+          if (_resp.value.isArray()) {
+            // This code hasn't actually been tested
+            let _a = new Answer(opts.prompt, []);
+            _resp.value.forEach((answer_value) => {
+              _a.responses.push({ index: 0, value: answer_value });
+            });
+            return _a;
+          } else {
+            return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
+          }
         }
       },
       (reason) => {
@@ -116,19 +127,8 @@ export function Object(_object: {}, _name?: string): void {
   stdout(_o);
 }
 
-export function Run(_command, _callback?, _directory = process.cwd()) {
-  const child_process = require("child_process");
-  if (_callback === undefined) {
-    child_process.exec(_command, { cwd: _directory }, (error, stdout, stderr) => {
-      if (error) {
-        Error(`Error occurred while executing command: \`${_command}\` in directory: ${_directory}`);
-      } else if (stdout) {
-        Line(stdout);
-      }
-    });
-  } else {
-    child_process.exec(_command, { cwd: _directory }, _callback);
-  }
+export function Run(_command, _callback = cb__handle_run_default, _directory = process.cwd()) {
+  child_process.exec(_command, { cwd: _directory }, _callback);
 }
 
 export function Colour(
