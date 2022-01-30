@@ -1,9 +1,11 @@
 import * as path from "path";
 import * as c from "../util/cmd_utils";
-import { Colour, FG_COLOURS, QuestionTypes } from "../util/cmd_utils";
+import { Colour } from "../util/cmd_utils";
 import { Dependency } from "../interfaces/Dependency";
 import { Project_Types } from "../enums/Project_Types";
 import { Dependency_Types } from "../enums/Dependency_Types";
+import { FG_COLOURS } from "../util/enums/STDOUT";
+import { Question_Types } from "../util/enums/Question_Types";
 
 export class Project_Structure {
   public get Type(): Project_Types {
@@ -105,7 +107,7 @@ export class Project_Structure {
         .Question({
           prompt: "Choose directory (default is cwd)",
           default_value: "./",
-          prompt_type: QuestionTypes.Input_String,
+          prompt_type: Question_Types.Input_String,
         })
         .then((value) => {
           if (typeof value.getValue() === "string") {
@@ -133,7 +135,7 @@ export class Project_Structure {
       await c
         .Question({
           prompt: "",
-          prompt_type: QuestionTypes.Input_Boolean,
+          prompt_type: Question_Types.Input_Boolean,
           default_value: true,
         })
         .then(
@@ -164,7 +166,7 @@ export class Project_Structure {
     await c
       .Question({
         prompt: "What type of Node project will you be creating?",
-        prompt_type: QuestionTypes.Select_Single,
+        prompt_type: Question_Types.Select_Single,
         prompt_options: [
           { title: "Static Website", value: Project_Types.Static_Website },
           { title: "Dynamic Website", value: Project_Types.Dynamic_Website },
@@ -214,7 +216,7 @@ export class Project_Structure {
         await c
           .Question({
             prompt: "Is your project an Electron.js app? (y/N) ",
-            prompt_type: QuestionTypes.Input_Boolean,
+            prompt_type: Question_Types.Input_Boolean,
             default_value: false,
           })
           .then((answer) => {
@@ -237,7 +239,7 @@ export class Project_Structure {
         await c
           .Question({
             prompt: "Which Mobile Development Framework will you be using?",
-            prompt_type: QuestionTypes.Select_Single,
+            prompt_type: Question_Types.Select_Single,
             prompt_options: [
               { title: "React Native", value: "react-native" },
               { title: "Flutter", value: "flutter" },
@@ -264,7 +266,7 @@ export class Project_Structure {
     c.Line("Question 3:");
     await c.Question({
       prompt: "Is your project using TypeScript? (y/N) ",
-      prompt_type: QuestionTypes.Input_Boolean,
+      prompt_type: Question_Types.Input_Boolean,
       default_value: false,
     });
 
@@ -279,7 +281,7 @@ export class Project_Structure {
     await c
       .Question({
         prompt: "Will you be using any of the following JavaScript frameworks?",
-        prompt_type: QuestionTypes.Select_Single,
+        prompt_type: Question_Types.Select_Single,
         prompt_options: [
           { title: "-None-", value: "" },
           { title: "Angular", value: "angular" },

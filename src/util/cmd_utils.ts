@@ -1,6 +1,9 @@
 import * as util from "util";
-import { Answer } from "../classes/Answer";
-import { QuestionOptions } from "../interfaces/QuestionOptions";
+import { Answer } from "./classes/Answer";
+import { STDOUT_STYLE } from "./interfaces/STDOUT_STYLE";
+import { Question_Types } from "./enums/Question_Types";
+import { BG_COLOURS, FG_COLOURS, STDOUT_MODIFIERS } from "./enums/STDOUT";
+import { Question_Options } from "./interfaces/Question_Options";
 
 export function Paragraph(_input: string[], _spacing = true) {
   _input.forEach((value) => stdout(value));
@@ -42,15 +45,7 @@ export function Abort(_input = "Aborting", _code = 0): never {
   process.exit(_code);
 }
 
-export enum QuestionTypes {
-  Input_String,
-  Input_Number,
-  Input_Boolean,
-  Select_Single,
-  Select_Multiple,
-}
-
-export async function Question(opts: QuestionOptions): Promise<Answer> {
+export async function Question(opts: Question_Options): Promise<Answer> {
   const prompts = require("prompts");
   const t = require("./txt_utils");
 
@@ -70,7 +65,7 @@ export async function Question(opts: QuestionOptions): Promise<Answer> {
   }
 
   switch (opts.prompt_type) {
-    case QuestionTypes.Input_Boolean:
+    case Question_Types.Input_Boolean:
       return await handle_single_val_question(
         prompts({
           type: "confirm",
@@ -79,7 +74,7 @@ export async function Question(opts: QuestionOptions): Promise<Answer> {
           initial: t.parse_string_to_boolean(opts.default_value),
         })
       );
-    case QuestionTypes.Select_Single:
+    case Question_Types.Select_Single:
       return await handle_single_val_question(
         prompts({
           type: "select",
@@ -89,9 +84,9 @@ export async function Question(opts: QuestionOptions): Promise<Answer> {
           initial: opts?.default_value,
         })
       );
-    case QuestionTypes.Select_Multiple:
+    case Question_Types.Select_Multiple:
       break;
-    case QuestionTypes.Input_String:
+    case Question_Types.Input_String:
       return await handle_single_val_question(
         prompts({
           type: "text",
@@ -100,7 +95,7 @@ export async function Question(opts: QuestionOptions): Promise<Answer> {
           initial: opts?.default_value,
         })
       );
-    case QuestionTypes.Input_Number:
+    case Question_Types.Input_Number:
       return await handle_single_val_question(
         prompts({
           type: "number",
@@ -136,54 +131,11 @@ export function Run(_command, _callback?, _directory = process.cwd()) {
   }
 }
 
-export enum STDOUT_MODIFIERS {
-  Reset = "\x1b[0m",
-  Bright = "\x1b[1m",
-  Dim = "\x1b[2m",
-  Underscore = "\x1b[4m",
-  Blink = "\x1b[5m",
-  Reverse = "\x1b[7m",
-  Hidden = "\x1b[8m",
-}
-
-export enum FG_COLOURS {
-  FgBlack = "\x1b[30m",
-  FgRed = "\x1b[31m",
-  FgGreen = "\x1b[32m",
-  FgYellow = "\x1b[33m",
-  FgBlue = "\x1b[34m",
-  FgMagenta = "\x1b[35m",
-  FgCyan = "\x1b[36m",
-  FgWhite = "\x1b[37m",
-}
-
-export enum BG_COLOURS {
-  BgBlack = "\x1b[40m",
-  BgRed = "\x1b[41m",
-  BgGreen = "\x1b[42m",
-  BgYellow = "\x1b[43m",
-  BgBlue = "\x1b[44m",
-  BgMagenta = "\x1b[45m",
-  BgCyan = "\x1b[46m",
-  BgWhite = "\x1b[47m",
-}
-
 export function Colour(
   _text,
   _styles: [FG_COLOURS | BG_COLOURS | STDOUT_MODIFIERS] | FG_COLOURS | BG_COLOURS | STDOUT_MODIFIERS
 ) {
   return _styles + _text + STDOUT_MODIFIERS.Reset;
-}
-
-enum STDOUT_TYPES {
-  log,
-  error,
-}
-
-export interface STDOUT_STYLE {
-  modifier?: STDOUT_MODIFIERS;
-  foreground_colour?: FG_COLOURS;
-  background_colour?: BG_COLOURS;
 }
 
 function stdout(

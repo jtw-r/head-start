@@ -1,4 +1,4 @@
-import { Error, QuestionTypes } from "../util/cmd_utils";
+import { Error, QuestionTypes } from "../cmd_utils";
 
 export class Answer {
   type: QuestionTypes;
