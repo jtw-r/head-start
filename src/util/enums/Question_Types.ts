@@ -4,4 +4,6 @@ export enum Question_Types {
   Input_Boolean,
   Select_Single,
   Select_Multiple,
+  Toggle,
+  Input_List,
 }

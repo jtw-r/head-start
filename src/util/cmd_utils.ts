@@ -124,6 +124,17 @@ export async function Question(opts: Question_Options): Promise<Answer> {
           initial: t.parse_string_to_boolean(opts.default_value),
         })
       );
+    case Question_Types.Toggle:
+      return await handle_questions(
+        prompts({
+          type: "toggle",
+          name: "value",
+          message: opts.prompt,
+          initial: opts?.default_value,
+          active: opts?.prompt_options[0],
+          inactive: opts?.prompt_options[1],
+        })
+      );
     case Question_Types.Select_Single:
       return await handle_questions(
         prompts({
@@ -135,7 +146,17 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         })
       );
     case Question_Types.Select_Multiple:
-      break;
+      return await handle_questions(
+        prompts({
+          type: "multiselect",
+          name: "value",
+          message: opts.prompt,
+          choices: opts?.prompt_options,
+          initial: opts?.default_value,
+          min: opts?.min_select_amount,
+          max: opts?.max_select_amount,
+        })
+      );
     case Question_Types.Input_String:
       return await handle_questions(
         prompts({
@@ -152,6 +173,16 @@ export async function Question(opts: Question_Options): Promise<Answer> {
           name: "value",
           message: opts.prompt,
           initial: opts.default_value,
+        })
+      );
+    case Question_Types.Input_List:
+      return await handle_questions(
+        prompts({
+          type: "list",
+          name: "value",
+          message: opts.prompt,
+          initial: opts?.default_value,
+          separator: opts?.list_separator,
         })
       );
   }
