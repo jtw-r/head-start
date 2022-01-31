@@ -96,7 +96,7 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         if (typeof _resp.value === "undefined") {
           Abort("Empty value passed. Aborting!");
         } else {
-          if (_resp.value.isArray()) {
+          if (typeof _resp.value === "object") {
             // This code hasn't actually been tested
             let _a = new Answer(opts.prompt, []);
             _resp.value.forEach((answer_value) => {

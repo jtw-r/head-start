@@ -8,7 +8,7 @@ import { FG_COLOURS } from "../util/enums/STDOUT";
 import { Question_Types } from "../util/enums/Question_Types";
 
 export class Project_Structure {
-  protected name: string;
+  protected name: string = "New Project";
   protected root_directory: string;
   protected dot_directory: string;
   protected type: Project_Types;
@@ -16,6 +16,7 @@ export class Project_Structure {
     uses_typescript: false,
     uses_prettier: true,
     uses_eslint: true,
+    build_tool: "none",
   };
   protected dependencies: Dependency[] = [];
 
@@ -42,7 +43,9 @@ export class Project_Structure {
     }
   }
 
-  public check_dependency(_dependency) {}
+  public check_for_dependency(_dependency): boolean {
+    return false;
+  }
 
   public update_directories(_new_path: string): void {
     this.root_directory = path.resolve(_new_path);
@@ -67,6 +70,22 @@ export class Project_Structure {
      *
      *  Let's get all of our questions out of the way beforehand, so we only have to install the tools that we actually
      *    need.
+     *
+     *  1. Get the directory for the project
+     *  2. Get the project type
+     *    2.1 Ask the user questions about the project type they're using
+     *  3. Ask if they're using typescript
+     *  4. Frameworks?
+     *    4.1 All-in-one Frameworks (Remix, Next.js)
+     *    4.2 Front End Frameworks/Libraries (React)
+     *    4.3 Back End Frameworks/Libraries (Express.js)
+     *  5. Ask the user if they'll need a build tool--if it hasn't been set already (some frameworks come with one)
+     *  6. Ask if they would like to configure the developer tools--or use the default options (eslint + prettier)
+     *  7. Ask if they would like file watchers
+     *  8. Ask where they are deploying their project to (could be inferred too sometimes from the project type).
+     *    8.1. Setup GitHub actions
+     *
+     *  x. Database configuring?
      *
      */
 
@@ -153,6 +172,7 @@ export class Project_Structure {
             }
           },
           (err) => {
+            console.log(err);
             c.Error("Error occurred while sorting out project directory");
           }
         );
@@ -189,11 +209,57 @@ export class Project_Structure {
     This is where you ask the user specific questions pertaining to which project type they are setting up
      */
 
+    if (this.type === Project_Types.Static_Website || this.type === Project_Types.Dynamic_Website) {
+      // Ask them questions about their website!!
+      /*
+    JavaScript Frameworks
+    TODO: Split this into three sections
+     1. All in one frameworks: Remix, Next.js
+     2. Front end "javascript libraries/frameworks": react,
+     3. Back end frameworks: Express
+     */
+      c.Line("Will you be using any of the following JavaScript frameworks?");
+      await c
+        .Question({
+          prompt: "Will you be using any of the following JavaScript frameworks?",
+          prompt_type: Question_Types.Select_Single,
+          prompt_options: [
+            { title: "-None-", value: "" },
+            { title: "Angular", value: "angular" },
+            { title: "Backbone.js", value: "backbone" },
+            { title: "Ember.js", value: "ember" },
+            { title: "EJS", value: "ejs" },
+            { title: "Express.js", value: "express" },
+            { title: "Ionic", value: "ionic" },
+            { title: "Knockout", value: "knockout" },
+            { title: "Mithril.js", value: "mithril" },
+            { title: "Next.js", value: "next" },
+            { title: "Polymer", value: "preact" },
+            { title: "React.js", value: "react" },
+            { title: "Remix", value: "remix" },
+            { title: "Svelt", value: "svelt" },
+            { title: "Vite.js", value: "vite" },
+            { title: "Vue.js", value: "vue" },
+          ],
+          default_value: 0,
+        })
+        .then((answer) => {
+          let framework = answer.getValue().toString() ?? "none";
+          if (framework.length > 0 && framework !== "none") {
+            c.Line("Adding Framework: " + framework);
+            this.add_dependency({ name: framework, options: {}, type: Dependency_Types.Framework, version: "latest" });
+          }
+        });
+      c.Object(this, "project");
+    }
+
     switch (this.type) {
       case Project_Types.Static_Website:
         /*
         Static Website
         */
+
+        // Will you be using a framework that has SSG?
         break;
       case Project_Types.Dynamic_Website:
         /*
@@ -249,8 +315,12 @@ export class Project_Structure {
             default_value: 0,
           })
           .then((answer) => {
-            this.type = <Project_Types>answer.getValue();
-            c.Line("Setting project type to: " + this.type);
+            this.dependencies.push({
+              name: answer.getValue(),
+              options: {},
+              type: Dependency_Types.Framework,
+              version: "latest",
+            });
           });
         break;
       default:
@@ -271,46 +341,5 @@ export class Project_Structure {
       prompt_type: Question_Types.Input_Boolean,
       default_value: false,
     });
-
-    /*
-    JavaScript Frameworks
-    TODO: Split this into three sections
-     1. All in one frameworks: Remix, Next.js
-     2. Front end "javascript libraries/frameworks": react,
-     3. Back end frameworks: Express
-     */
-    c.Line("Will you be using any of the following JavaScript frameworks?");
-    await c
-      .Question({
-        prompt: "Will you be using any of the following JavaScript frameworks?",
-        prompt_type: Question_Types.Select_Single,
-        prompt_options: [
-          { title: "-None-", value: "" },
-          { title: "Angular", value: "angular" },
-          { title: "Backbone.js", value: "backbone" },
-          { title: "Ember.js", value: "ember" },
-          { title: "EJS", value: "ejs" },
-          { title: "Express.js", value: "express" },
-          { title: "Ionic", value: "ionic" },
-          { title: "Knockout", value: "knockout" },
-          { title: "Mithril.js", value: "mithril" },
-          { title: "Next.js", value: "next" },
-          { title: "Polymer", value: "preact" },
-          { title: "React.js", value: "react" },
-          { title: "Remix", value: "remix" },
-          { title: "Svelt", value: "svelt" },
-          { title: "Vite.js", value: "vite" },
-          { title: "Vue.js", value: "vue" },
-        ],
-        default_value: 0,
-      })
-      .then((answer) => {
-        let framework = answer.getValue().toString() ?? "none";
-        if (framework.length > 0 && framework !== "none") {
-          c.Line("Adding Framework: " + framework);
-          this.add_dependency({ name: framework, options: {}, type: Dependency_Types.Framework, version: "latest" });
-        }
-      });
-    c.Object(this, "project");
   }
 }
