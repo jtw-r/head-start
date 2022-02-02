@@ -357,5 +357,3 @@ export class Project_Structure {
     });
   }
 }
-
-export class Project_Configuration extends Project_Structure {}
