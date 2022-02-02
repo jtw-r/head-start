@@ -36,8 +36,15 @@ export class Project_Structure {
     return this.root_directory;
   }
 
-  public get_dependencies(_type?: Dependency_Types) {
+  public get_dependencies(_type?: Dependency_Types): Dependency | Dependency[] {
     if (_type) {
+      let _o = [];
+      this.dependencies.forEach((value, index, array) => {
+        if (value.type === _type) {
+          _o.push(value);
+        }
+      });
+      return _o;
     } else {
       return this.dependencies;
     }
@@ -56,13 +63,34 @@ export class Project_Structure {
     this.config_options[_option] = _value;
   }
 
-  public config_get(_option: string) {
+  public config_get(_option: string): any {
     return this.config_options[_option];
   }
 
   public add_dependency(_dependency: Dependency) {
     // We can do validation here too, if needed!
     this.dependencies.push(_dependency);
+  }
+
+  async choose_directory(_class_values: Project_Structure = this): Promise<boolean> {
+    // Still getting used to promises!!!
+    // Sorry if this isn't pretty
+    return await c
+      .Question({
+        prompt: "Choose directory (default is cwd)",
+        default_value: "./",
+        prompt_type: Question_Types.Input_String,
+      })
+      .then((value) => {
+        if (typeof value.getValue() === "string") {
+          _class_values.update_directories(<string>value.getValue());
+          return true;
+        } else {
+          c.Error("Value passed is not string");
+          return false;
+        }
+      })
+      .finally(() => {});
   }
 
   public async guided_setup(argv) {
@@ -121,25 +149,6 @@ export class Project_Structure {
     c.Line(Colour("Let's get started on your new project!", FG_COLOURS.FgGreen));
     c.Empty();
 
-    async function choose_directory(_class_values: Project_Structure = this) {
-      // Still getting used to promises!!!
-      // Sorry if this isn't pretty
-      await c
-        .Question({
-          prompt: "Choose directory (default is cwd)",
-          default_value: "./",
-          prompt_type: Question_Types.Input_String,
-        })
-        .then((value) => {
-          if (typeof value.getValue() === "string") {
-            _class_values.update_directories(<string>value.getValue());
-          } else {
-            c.Error("Value passed is not string");
-          }
-        })
-        .finally(() => {});
-    }
-
     c.Empty;
     c.Line("Question 1:");
 
@@ -147,7 +156,7 @@ export class Project_Structure {
       // This means that the project flag "-d" has NOT been set, so we need to ask the user which directory they would
       // like to set their project root in.
       c.Line("No project directory has been set yet. Where would you like to begin?");
-      await choose_directory();
+      await this.choose_directory();
     } else {
       c.Line("Below is the directory you've specified for your project root. Is this correct?");
       c.Empty();
@@ -165,7 +174,7 @@ export class Project_Structure {
               // No
               c.Empty;
               c.Line("Question 1.1:");
-              choose_directory();
+              this.choose_directory();
             } else {
               // Yes
               this.update_directories(path.resolve(argv["d"]));
@@ -247,7 +256,12 @@ export class Project_Structure {
           let framework = answer.getValue().toString() ?? "none";
           if (framework.length > 0 && framework !== "none") {
             c.Line("Adding Framework: " + framework);
-            this.add_dependency({ name: framework, options: {}, type: Dependency_Types.Framework, version: "latest" });
+            this.add_dependency({
+              name: framework,
+              options: {},
+              type: Dependency_Types.Framework,
+              version: "latest",
+            });
           }
         });
       c.Object(this, "project");
@@ -343,3 +357,5 @@ export class Project_Structure {
     });
   }
 }
+
+export class Project_Configuration extends Project_Structure {}
