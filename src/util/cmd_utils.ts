@@ -31,11 +31,11 @@ export function List(_input: string[]) {
 
 /**
  *
- * @param {number} _width
+ * @param {number} rows
  * @constructor
  */
-export function Divider(_width = 1) {
-  for (let i = 0; i < _width; i++) {
+export function Divider(rows = 1) {
+  for (let i = 0; i < rows; i++) {
     stdout("=".repeat(90));
   }
 }

@@ -28,7 +28,7 @@ You've most likely gotten this from a template.
 # Run the cli script
 
 # If you are using Node
-$ node cli.ts init --welcome
+$ npx @jtw-r/head-start init --welcome
 ```
 
 You can also run a script with the parameters set already
