@@ -23,7 +23,8 @@ export function Paragraph(_input: string[], _spacing = true) {
 /**
  * Prints out each element in an array in a list form.
  * @param {any[]} _list The array to print out
- * @param _line_prefix The character to prefix each new line in the list with. Adds a space at the end. Default is "*"
+ * @param {string} _line_prefix The character to prefix each new line in the list with. Adds a space at the end. Default
+ * is "*"
  * @constructor
  */
 export function List(_list: any[], _line_prefix: string = "*") {
@@ -46,6 +47,7 @@ export function Divider(rows: number = 1, length: number = 90, pattern: string =
 /**
  * Prints a line of text to the console.
  * @param {string | number | boolean} _output The message that will be printed out to the console
+ * @returns {void}
  * @constructor
  */
 export function Line(_output: string | number | boolean): void {
@@ -84,12 +86,13 @@ export function Abort(_abort_message = "Aborting", _code = 0): never {
 }
 
 /**
- *
- * @param {Question_Options} opts
+ * Prints out a question to the console. Waits for user input and returns a promise with the answer containing the
+ * responses.
+ * @param {Question_Options} _options
  * @returns {Promise<Answer>}
  * @constructor
  */
-export async function Question(opts: Question_Options): Promise<Answer> {
+export async function Question(_options: Question_Options): Promise<Answer> {
   const prompts = require("prompts");
   const t = require("./txt_utils");
 
@@ -100,8 +103,8 @@ export async function Question(opts: Question_Options): Promise<Answer> {
           Abort("Empty value passed. Aborting!");
         } else {
           return typeof _resp.value === "object"
-            ? new Answer(opts.prompt, _resp) // If the response is an array, return it unchanged
-            : new Answer(opts.prompt_type, [_resp]); // If it's anything else, wrap it in an array
+            ? new Answer(_options.prompt, _resp) // If the response is an array, return it unchanged
+            : new Answer(_options.prompt_type, [_resp]); // If it's anything else, wrap it in an array
         }
       },
       (reason) => {
@@ -110,14 +113,14 @@ export async function Question(opts: Question_Options): Promise<Answer> {
     );
   }
 
-  switch (opts.prompt_type) {
+  switch (_options.prompt_type) {
     case Question_Types.Input_Boolean:
       return await handle_questions(
         prompts({
           type: "confirm",
           name: "value",
-          message: opts.prompt,
-          initial: t.parse_string_to_boolean(opts.default_value),
+          message: _options.prompt,
+          initial: t.parse_string_to_boolean(_options.default_value),
         })
       );
     case Question_Types.Toggle:
@@ -125,10 +128,10 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         prompts({
           type: "toggle",
           name: "value",
-          message: opts.prompt,
-          initial: opts?.default_value,
-          active: opts?.prompt_options[0],
-          inactive: opts?.prompt_options[1],
+          message: _options.prompt,
+          initial: _options?.default_value,
+          active: _options?.prompt_options[0],
+          inactive: _options?.prompt_options[1],
         })
       );
     case Question_Types.Select_Single:
@@ -136,9 +139,9 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         prompts({
           type: "select",
           name: "value",
-          message: opts.prompt,
-          choices: opts?.prompt_options,
-          initial: opts?.default_value,
+          message: _options.prompt,
+          choices: _options?.prompt_options,
+          initial: _options?.default_value,
         })
       );
     case Question_Types.Select_Multiple:
@@ -146,11 +149,11 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         prompts({
           type: "multiselect",
           name: "value",
-          message: opts.prompt,
-          choices: opts?.prompt_options,
-          initial: opts?.default_value,
-          min: opts?.min_select_amount,
-          max: opts?.max_select_amount,
+          message: _options.prompt,
+          choices: _options?.prompt_options,
+          initial: _options?.default_value,
+          min: _options?.min_select_amount,
+          max: _options?.max_select_amount,
         })
       );
     case Question_Types.Input_String:
@@ -158,8 +161,8 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         prompts({
           type: "text",
           name: "value",
-          message: opts.prompt,
-          initial: opts?.default_value,
+          message: _options.prompt,
+          initial: _options?.default_value,
         })
       );
     case Question_Types.Input_Number:
@@ -167,8 +170,8 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         prompts({
           type: "number",
           name: "value",
-          message: opts.prompt,
-          initial: opts.default_value,
+          message: _options.prompt,
+          initial: _options.default_value,
         })
       );
     case Question_Types.Input_List:
@@ -176,9 +179,9 @@ export async function Question(opts: Question_Options): Promise<Answer> {
         prompts({
           type: "list",
           name: "value",
-          message: opts.prompt,
-          initial: opts?.default_value,
-          separator: opts?.list_separator,
+          message: _options.prompt,
+          initial: _options?.default_value,
+          separator: _options?.list_separator,
         })
       );
   }
