@@ -8,49 +8,52 @@ import { cb__handle_run_default } from "./callbacks";
 import * as child_process from "child_process";
 
 /**
- *
- * @param {string[]} _input
- * @param {boolean} _spacing
+ * Prints out a paragraph of texts to the console.
+ * @param {string[]} _input The array of strings to print.
+ * @param {boolean} _spacing T/F: Add a blank new line after the paragraph. Default is true which adds the empty line.
  * @constructor
  */
 export function Paragraph(_input: string[], _spacing = true) {
   _input.forEach((value) => stdout(value));
   if (_spacing) {
-    stdout();
+    Empty();
   }
 }
 
 /**
- *
- * @param {string[]} _input
+ * Prints out each element in an array in a list form.
+ * @param {any[]} _list The array to print out
+ * @param _line_prefix The character to prefix each new line in the list with. Adds a space at the end. Default is "*"
  * @constructor
  */
-export function List(_input: string[]) {
-  _input.forEach((value) => stdout(`* ${value}`));
+export function List(_list: any[], _line_prefix: string = "*") {
+  _list.forEach((value) => stdout(`* ${value}`));
 }
 
 /**
- *
- * @param {number} rows
+ * Prints out a line of repeating text to divide the console.
+ * @param {number} rows The number of rows the divider should be. Default is 1
+ * @param {number} length The length/width of each row. Default is 90 character
+ * @param {string} pattern The character/string to repeat. Default is "="
  * @constructor
  */
-export function Divider(rows = 1) {
+export function Divider(rows: number = 1, length: number = 90, pattern: string = "=") {
   for (let i = 0; i < rows; i++) {
-    stdout("=".repeat(90));
+    stdout(pattern.repeat(Math.round(length / pattern.length)));
   }
 }
 
 /**
- *
- * @param {string} _input
+ * Prints a line of text to the console.
+ * @param {string | number | boolean} _output The message that will be printed out to the console
  * @constructor
  */
-export function Line(_input: string | number | boolean): void {
-  stdout(_input);
+export function Line(_output: string | number | boolean): void {
+  stdout(_output);
 }
 
 /**
- *
+ * Prints an empty line to the console.
  * @constructor
  */
 export function Empty(): void {
@@ -58,25 +61,25 @@ export function Empty(): void {
 }
 
 /**
- *
- * @param _input
+ * Outputs an error, and aborts the process.
+ * @param {string | number | boolean} _error_message The message that will be printed out to the console
  * @returns {never}
  * @constructor
  */
-export function Error(_input): never {
-  stdout(_input, { foreground_colour: FG_COLOURS.FgRed });
+export function Error(_error_message: string | number | boolean): never {
+  stdout(_error_message, { foreground_colour: FG_COLOURS.FgRed });
   process.exit(1);
 }
 
 /**
- *
- * @param {string} _input
- * @param {number} _code
+ * Aborts the process.
+ * @param {string} _abort_message The message that will be printed to the console before aborting. Default is "Aborting"
+ * @param {number} _code The process exit code. Default is 0
  * @returns {never}
  * @constructor
  */
-export function Abort(_input = "Aborting", _code = 0): never {
-  Line(_input);
+export function Abort(_abort_message = "Aborting", _code = 0): never {
+  Line(_abort_message);
   process.exit(_code);
 }
 
