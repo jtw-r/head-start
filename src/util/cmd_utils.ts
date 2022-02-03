@@ -90,22 +90,15 @@ export async function Question(opts: Question_Options): Promise<Answer> {
   const prompts = require("prompts");
   const t = require("./txt_utils");
 
-  async function handle_questions(q: typeof prompts) {
+  async function handle_questions(q: typeof prompts): Promise<Answer> {
     return await q.then(
       (_resp, _interrupt) => {
         if (typeof _resp.value === "undefined" || _interrupt) {
           Abort("Empty value passed. Aborting!");
         } else {
-          if (typeof _resp.value === "object") {
-            // This code hasn't actually been tested
-            let _a = new Answer(opts.prompt, []);
-            _resp.value.forEach((answer_value) => {
-              _a.responses.push({ index: 0, value: answer_value });
-            });
-            return _a;
-          } else {
-            return new Answer(opts.prompt_type, [{ index: 0, value: _resp.value }]);
-          }
+          return typeof _resp.value === "object"
+            ? new Answer(opts.prompt, _resp) // If the response is an array, return it unchanged
+            : new Answer(opts.prompt_type, [_resp]); // If it's anything else, wrap it in an array
         }
       },
       (reason) => {

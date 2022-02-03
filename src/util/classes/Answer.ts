@@ -1,11 +1,9 @@
-import { Error, QuestionTypes } from "../cmd_utils";
+import { Error } from "../cmd_utils";
+import { Question_Types } from "../enums/Question_Types";
 
 export class Answer {
-  type: QuestionTypes;
-  responses: {
-    index: number;
-    value: any;
-  }[];
+  type: Question_Types;
+  responses: any[];
 
   constructor(_type, _responses = []) {
     this.type = _type;
@@ -14,19 +12,17 @@ export class Answer {
 
   getValue(): any {
     if (this.responses?.length >= 1) {
-      return this.responses[0].value;
+      return this.responses[0];
     } else {
       Error("Trying to get the value of an undefined response");
     }
   }
 
   getValues(): any[] {
-    let _v = [];
-    this.responses.forEach((value, index) => _v.push(value));
-    return _v;
+    return this.responses;
   }
 
-  addResponse(_value, _section_id = 0) {
-    this.responses.push({ index: _section_id, value: _value });
+  addResponse(_value) {
+    this.responses.push(_value);
   }
 }
