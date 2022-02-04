@@ -7,6 +7,9 @@ import { Dependency_Types } from "../enums/Dependency_Types";
 import { FG_COLOURS } from "../util/enums/STDOUT";
 import { Question_Types } from "../util/enums/Question_Types";
 
+/**
+ * @class
+ */
 export class Project_Structure {
   protected name: string = "New Project";
   protected root_directory: string;
@@ -98,8 +101,9 @@ export class Project_Structure {
    *
    * @param {string} _option
    * @param _value
+   * @returns {void}
    */
-  public config_set(_option: string, _value: any) {
+  public config_set(_option: string, _value: any): void {
     if (this.config_options[_option] !== undefined) {
       this.config_options[_option] = _value;
     }
@@ -117,10 +121,12 @@ export class Project_Structure {
   /**
    *
    * @param {Dependency} _dependency
+   * @returns {boolean}
    */
-  public add_dependency(_dependency: Dependency) {
+  public add_dependency(_dependency: Dependency): boolean {
     // We can do validation here too, if needed!
     this.dependencies.push(_dependency);
+    return true; // TODO: Check if failed
   }
 
   /**
@@ -154,7 +160,7 @@ export class Project_Structure {
    * @param argv
    * @returns {Promise<void>}
    */
-  public async guided_setup(argv) {
+  public async guided_setup(argv): Promise<void> {
     /*
      *
      *  Let's get all of our questions out of the way beforehand, so we only have to install the tools that we actually
