@@ -96,8 +96,13 @@ export async function Question(_options: Question_Options): Promise<Answer> {
   const prompts = require("prompts");
   const t = require("./txt_utils");
 
-  async function handle_questions(q: typeof prompts): Promise<Answer> {
-    return await q.then(
+  /**
+   *
+   * @param {any} _question_promise
+   * @returns {Promise<Answer>}
+   */
+  async function handle_questions(_question_promise: any): Promise<Answer> {
+    return await _question_promise.then(
       (_resp, _interrupt) => {
         if (typeof _resp.value === "undefined" || _interrupt) {
           Abort("Empty value passed. Aborting!");

@@ -12,7 +12,7 @@ export class Project_Structure {
   protected root_directory: string;
   protected dot_directory: string;
   protected type: Project_Types;
-  protected config_options = {
+  public config_options = {
     uses_typescript: false,
     uses_prettier: true,
     uses_eslint: true,
@@ -20,22 +20,47 @@ export class Project_Structure {
   };
   protected dependencies: Dependency[] = [];
 
+  /**
+   *
+   * @returns {Project_Types}
+   * @constructor
+   */
   public get Type(): Project_Types {
     return this.type;
   }
 
+  /**
+   *
+   * @returns {string}
+   * @constructor
+   */
   public get Name(): string {
     return this.name;
   }
 
+  /**
+   *
+   * @returns {string}
+   * @constructor
+   */
   public get Dot_directory(): string {
     return this.dot_directory;
   }
 
+  /**
+   *
+   * @returns {string}
+   * @constructor
+   */
   public get Root_directory(): string {
     return this.root_directory;
   }
 
+  /**
+   *
+   * @param {Dependency_Types} _type
+   * @returns {Dependency | Dependency[]}
+   */
   public get_dependencies(_type?: Dependency_Types): Dependency | Dependency[] {
     if (_type) {
       let _o = [];
@@ -50,28 +75,59 @@ export class Project_Structure {
     }
   }
 
+  /**
+   *
+   * @param _dependency
+   * @returns {boolean}
+   */
   public check_for_dependency(_dependency): boolean {
     return false;
   }
 
+  /**
+   *
+   * @param {string} _new_path
+   */
   public update_directories(_new_path: string): void {
     this.root_directory = path.resolve(_new_path);
     this.dot_directory = this.root_directory + "/.head_start";
+    // TODO: Move the .head_start/ directory over to the new location
   }
 
+  /**
+   *
+   * @param {string} _option
+   * @param _value
+   */
   public config_set(_option: string, _value: any) {
-    this.config_options[_option] = _value;
+    if (this.config_options[_option] !== undefined) {
+      this.config_options[_option] = _value;
+    }
   }
 
+  /**
+   *
+   * @param {string} _option
+   * @returns {any}
+   */
   public config_get(_option: string): any {
     return this.config_options[_option];
   }
 
+  /**
+   *
+   * @param {Dependency} _dependency
+   */
   public add_dependency(_dependency: Dependency) {
     // We can do validation here too, if needed!
     this.dependencies.push(_dependency);
   }
 
+  /**
+   *
+   * @param {Project_Structure} _class_values
+   * @returns {Promise<boolean>}
+   */
   async choose_directory(_class_values: Project_Structure = this): Promise<boolean> {
     // Still getting used to promises!!!
     // Sorry if this isn't pretty
@@ -93,6 +149,11 @@ export class Project_Structure {
       .finally(() => {});
   }
 
+  /**
+   *
+   * @param argv
+   * @returns {Promise<void>}
+   */
   public async guided_setup(argv) {
     /*
      *
