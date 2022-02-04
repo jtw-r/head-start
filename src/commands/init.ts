@@ -32,9 +32,11 @@ exports.handler = function (argv) {
    *  Ask Questions First
    *
    */
+  // This will create an empty project structure for us to work with.
+  let proj: Project_Structure = new Project_Structure();
 
-  let proj = new Project_Structure();
-
+  // We'll call the "guided setup" function, to get our project initialized interactively through the command line.
+  // I feel like we don't necessarily need to have the guided setup process nested inside the project structure class.
   proj.guided_setup(argv).then(
     (project_structure) => {
       /*
@@ -43,6 +45,9 @@ exports.handler = function (argv) {
        *
        */
       //build_project(argv, value.project);
+      /* ^^^^ This is commented out because we haven't fully reworked the "Ask Questions First" stage.
+       *        Thus, we do not want to call the next function in line, if the first one is outputting faulty data.
+       */
     },
     (err) => {
       c.Error(err);

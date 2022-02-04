@@ -8,7 +8,12 @@ import { FG_COLOURS } from "../util/enums/STDOUT";
 import { Question_Types } from "../util/enums/Question_Types";
 
 /**
+ * A head_start project structure
  * @class
+ * @classdesc This is a description of the Project_Structure class.
+ * @property config_options
+ * @property dependencies
+ * @property {Project_Structure.get_dependencies()} get_dependencies
  */
 export class Project_Structure {
   protected name: string = "New Project";
