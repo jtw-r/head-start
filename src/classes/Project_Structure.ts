@@ -29,7 +29,7 @@ export class Project_Structure {
   protected dependencies: Dependency[] = [];
 
   /**
-   *
+   * Gets the type of the project.
    * @returns {Project_Types}
    * @constructor
    */
@@ -38,7 +38,7 @@ export class Project_Structure {
   }
 
   /**
-   *
+   * Gets the name of the project.
    * @returns {string}
    * @constructor
    */
@@ -47,7 +47,7 @@ export class Project_Structure {
   }
 
   /**
-   *
+   * Gets the `.head_start/` directory path for the project
    * @returns {string}
    * @constructor
    */
@@ -56,7 +56,7 @@ export class Project_Structure {
   }
 
   /**
-   *
+   * Gets the root directory path for the project
    * @returns {string}
    * @constructor
    */
@@ -65,7 +65,8 @@ export class Project_Structure {
   }
 
   /**
-   *
+   * Gets a list of the project's dependencies.
+   * You can optionally pass in a specific dependency type to refine the list returned.
    * @param {Dependency_Types} _type
    * @returns {Dependency | Dependency[]}
    */
