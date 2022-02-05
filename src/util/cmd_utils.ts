@@ -4,8 +4,9 @@ import { STDOUT_STYLE } from "./interfaces/STDOUT_STYLE";
 import { Question_Types } from "./enums/Question_Types";
 import { BG_COLOURS, FG_COLOURS, STDOUT_MODIFIERS } from "./enums/STDOUT";
 import { Question_Options } from "./interfaces/Question_Options";
-import { cb__handle_run_default } from "./callbacks";
+import { cb__handle_run_default, handle_questions } from "./callbacks";
 import * as child_process from "child_process";
+import prompts = require("prompts");
 
 /**
  * Prints out a paragraph of texts to the console.
@@ -97,33 +98,9 @@ export function Abort(_abort_message = "Aborting", _code = 0): never {
  * @returns {Promise<Answer>}
  */
 export async function Question(_options: Question_Options): Promise<Answer> {
-  const prompts = require("prompts");
-  const t = require("./txt_utils");
-
-  /**
-   *
-   * @param {any} _question_promise
-   * @returns {Promise<Answer>}
-   */
-  async function handle_questions(_question_promise: any): Promise<Answer> {
-    return await _question_promise.then(
-      (_resp, _interrupt) => {
-        if (typeof _resp.value === "undefined" || _interrupt) {
-          Abort("Empty value passed. Aborting!");
-        } else {
-          return typeof _resp.value === "object"
-            ? new Answer(_options.prompt, _resp) // If the response is an array, return it unchanged
-            : new Answer(_options.prompt_type, [_resp]); // If it's anything else, wrap it in an array
-        }
-      },
-      (reason) => {
-        Error(reason);
-      }
-    );
-  }
-
   switch (_options.prompt_type) {
     case Question_Types.Input_Boolean:
+      let t = require("./txt_utils");
       return await handle_questions(
         prompts({
           type: "confirm",
@@ -133,17 +110,27 @@ export async function Question(_options: Question_Options): Promise<Answer> {
         })
       );
     case Question_Types.Toggle:
+      let active_value = "true";
+      let inactive_value = "false";
+      if (_options?.prompt_options?.length >= 1) {
+        active_value = _options?.prompt_options[0].value;
+        inactive_value = _options?.prompt_options[1].value;
+      }
       return await handle_questions(
         prompts({
           type: "toggle",
           name: "value",
           message: _options.prompt,
           initial: _options?.default_value,
-          active: _options?.prompt_options[0],
-          inactive: _options?.prompt_options[1],
+          active: active_value,
+          inactive: inactive_value,
         })
       );
     case Question_Types.Select_Single:
+      if (_options?.prompt_options?.length < 1) {
+        Error("No prompt choices passed");
+      }
+
       return await handle_questions(
         prompts({
           type: "select",
@@ -154,6 +141,10 @@ export async function Question(_options: Question_Options): Promise<Answer> {
         })
       );
     case Question_Types.Select_Multiple:
+      if (_options?.prompt_options?.length < 1) {
+        Error("No prompt choices passed");
+      }
+
       return await handle_questions(
         prompts({
           type: "multiselect",
@@ -204,16 +195,16 @@ export async function Question(_options: Question_Options): Promise<Answer> {
  * @returns {void}
  */
 export function Object(_object: {}, _name?: string): void {
-  let _o = "";
+  let formatted_output = "";
   if (_name) {
-    _o = `${_name} = `;
+    formatted_output = `${_name} = `;
   }
-  _o += util.inspect(_object);
-  stdout(_o);
+  formatted_output += util.inspect(_object);
+  stdout(formatted_output);
 }
 
 /**
- *
+ * Executes a shell command in the console as a child process
  * @param {string} _command
  * @param {(err, stdout, stderr) => void} _callback
  * @param {string} _directory
