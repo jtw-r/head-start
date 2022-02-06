@@ -11,11 +11,11 @@ export class Answer {
   }
 
   getValue(): any {
-    if (this.responses?.length >= 1) {
-      return this.responses[0];
-    } else {
+    if (this.responses?.length < 1) {
       Error("Trying to get the value of an undefined response");
     }
+
+    return this.responses[0];
   }
 
   getValues(): any[] {

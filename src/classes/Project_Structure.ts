@@ -153,10 +153,9 @@ export class Project_Structure {
         if (typeof value.getValue() === "string") {
           _class_values.update_directories(<string>value.getValue());
           return true;
-        } else {
-          c.Error("Value passed is not string");
-          return false;
         }
+        c.Error("Value passed is not string");
+        return false;
       })
       .finally(() => {});
   }
@@ -327,15 +326,17 @@ export class Project_Structure {
         })
         .then((answer) => {
           let framework = answer.getValue().toString() ?? "none";
-          if (framework.length > 0 && framework !== "none") {
-            c.Line("Adding Framework: " + framework);
-            this.add_dependency({
-              name: framework,
-              options: {},
-              type: Dependency_Types.Framework,
-              version: "latest",
-            });
+          if (!(framework.length > 0 && framework !== "none")) {
+            return;
           }
+
+          c.Line("Adding Framework: " + framework);
+          this.add_dependency({
+            name: framework,
+            options: {},
+            type: Dependency_Types.Framework,
+            version: "latest",
+          });
         });
       c.Object(this, "project");
     }
@@ -375,14 +376,16 @@ export class Project_Structure {
             default_value: false,
           })
           .then((answer) => {
-            if (answer.getValue() === true) {
-              this.dependencies.push({
-                name: "electron",
-                options: {},
-                type: Dependency_Types.Framework,
-                version: "latest",
-              });
+            if (answer.getValue() !== true) {
+              return;
             }
+
+            this.dependencies.push({
+              name: "electron",
+              options: {},
+              type: Dependency_Types.Framework,
+              version: "latest",
+            });
           });
         break;
       case Project_Types.Mobile_App:

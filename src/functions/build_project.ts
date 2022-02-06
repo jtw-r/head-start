@@ -35,14 +35,14 @@ export function build_project(argv, project: Project_Structure) {
     (err, stdout, stderr) => {
       if (err) {
         //some err occurred
-        c.Error(err);
         c.Line("Unknown framework. Leave the line blank of type  none  if you aren't using one.");
-      } else {
-        // the *entire* stdout and stderr (buffered)
-        c.Line(`${stdout}`);
-        c.Empty();
-        c.Line("NPM Setup");
+        c.Error(err);
       }
+
+      // the *entire* stdout and stderr (buffered)
+      c.Line(`${stdout}`);
+      c.Empty();
+      c.Line("NPM Setup");
     }
   );
 }
